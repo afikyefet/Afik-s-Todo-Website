@@ -1,0 +1,15 @@
+.todo-edit {
+    max-width: 300px;
+    margin: auto;
+}
+
+.todo-edit form {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.5rem;
+    font-family: 'Edu VIC WA NT Beginner', cursive;
+}
+
+.todo-edit form input {
+    margin-bottom: 1em;
+}

@@ -1,0 +1,6 @@
+.split-pane > div{
+    border: 1px dashed var(--clr2);
+    padding: 1em;
+    transition: 0.5s;
+    cursor: pointer;
+}
