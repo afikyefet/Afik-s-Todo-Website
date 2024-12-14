@@ -1,5 +1,11 @@
 import { todoService } from "../../services/todo.service.js"
-import { REMOVE_TODO, SET_FILTER, SET_TODO } from "../reducers/todo.reducer.js"
+import {
+	ADD_TODO,
+	REMOVE_TODO,
+	SET_FILTER,
+	SET_TODO,
+	UPDATE_TODO,
+} from "../reducers/todo.reducer.js"
 import { store } from "../store.js"
 
 export function loadTodos() {
@@ -12,6 +18,11 @@ export function loadTodos() {
 			console.log("todo action -> Cannot load todos", err)
 			throw err
 		})
+}
+
+export function saveTodo(todo) {
+	const type = todo._id ? UPDATE_TODO : ADD_TODO
+	return store.dispatch({ type, todo })
 }
 
 export function setFilterBy(filterBy) {
