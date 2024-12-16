@@ -40,15 +40,21 @@ export function TodoIndex() {
 	}
 
 	function onRemoveTodo(todoId) {
-		removeTodo(todoId)
-			.then(() => {
-				dispatch({ type: REMOVE_TODO, todoId })
-				showSuccessMsg(`Todo removed`)
-			})
-			.catch((err) => {
-				console.log("err:", err)
-				showErrorMsg("Cannot remove todo " + todoId)
-			})
+		const confirmed = window.confirm(
+			"Are you sure you want to delete this item?"
+		)
+		if (confirmed) {
+			//   dispatch(deleteItem(itemId));
+			removeTodo(todoId)
+				.then(() => {
+					dispatch({ type: REMOVE_TODO, todoId })
+					showSuccessMsg(`Todo removed`)
+				})
+				.catch((err) => {
+					console.log("err:", err)
+					showErrorMsg("Cannot remove todo " + todoId)
+				})
+		}
 	}
 
 	function onToggleTodo(todo) {

@@ -1,76 +1,109 @@
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
+import { saveTodo, setSelectedTodo } from "../store/actions/todo.actions.js"
 
 const { useState, useEffect } = React
+const { useSelector } = ReactRedux
 const { useNavigate, useParams } = ReactRouterDOM
 
 export function TodoEdit() {
+	let todo = useSelector((storeState) => storeState.todoModule.selectedTodo)
+	const navigate = useNavigate()
+	const params = useParams()
+	const [todoToEdit, setTodoToEdit] = useState(todo)
 
-    const [todoToEdit, setTodoToEdit] = useState(todoService.getEmptyTodo())
-    const navigate = useNavigate()
-    const params = useParams()
+	useEffect(() => {
+		if (params.todoId) {
+			loadTodo()
+		} else {
+			setTodoToEdit((todo) => (todo = todoService.getEmptyTodo()))
+		}
+	}, [params.todoId, todo])
 
-    useEffect(() => {
-        if (params.todoId) loadTodo()
-    }, [])
+	useEffect(() => {
+		if (todo && params.todoId) setTodoToEdit({ ...todo })
+	}, [todo])
 
-    function loadTodo() {
-        todoService.get(params.todoId)
-            .then(setTodoToEdit)
-            .catch(err => console.log('err:', err))
-    }
+	function loadTodo() {
+		try {
+			setSelectedTodo(params.todoId)
+		} catch (err) {
+			console.error("err:", err)
+			showErrorMsg("Cannot load todo")
+			navigate("/todo")
+		}
+	}
 
-    function handleChange({ target }) {
-        const field = target.name
-        let value = target.value
+	function handleChange({ target }) {
+		const field = target.name
+		let value = target.value
 
-        switch (target.type) {
-            case 'number':
-            case 'range':
-                value = +value || ''
-                break
+		switch (target.type) {
+			case "number":
+			case "range":
+				value = +value || ""
+				break
 
-            case 'checkbox':
-                value = target.checked
-                break
+			case "checkbox":
+				value = target.checked
+				break
 
-            default:
-                break
-        }
+			default:
+				break
+		}
 
-        setTodoToEdit(prevTodoToEdit => ({ ...prevTodoToEdit, [field]: value }))
-    }
+		setTodoToEdit((prevTodo) => ({ ...prevTodo, [field]: value }))
+	}
 
-    function onSaveTodo(ev) {
-        ev.preventDefault()
-        todoService.save(todoToEdit)
-            .then((savedTodo) => {
-                navigate('/todo')
-                showSuccessMsg(`Todo Saved (id: ${savedTodo._id})`)
-            })
-            .catch(err => {
-                showErrorMsg('Cannot save todo')
-                console.log('err:', err)
-            })
-    }
+	function onSaveTodo(ev) {
+		ev.preventDefault()
+		saveTodo(todoToEdit)
+			.then((savedTodo) => {
+				navigate("/todo")
+				showSuccessMsg(`Todo Saved (id: ${savedTodo._id})`)
+			})
+			.catch((err) => {
+				showErrorMsg("Cannot save todo")
+				console.log("err:", err)
+			})
+	}
 
-    const { txt, importance, isDone } = todoToEdit
+	if (!todoToEdit) return <div>Loading...</div>
 
-    return (
-        <section className="todo-edit">
-            <form onSubmit={onSaveTodo} >
-                <label htmlFor="txt">Text:</label>
-                <input onChange={handleChange} value={txt} type="text" name="txt" id="txt" />
+	const { txt, importance, isDone } = todoToEdit
 
-                <label htmlFor="importance">Importance:</label>
-                <input onChange={handleChange} value={importance} type="number" name="importance" id="importance" />
+	return (
+		<section className="todo-edit">
+			<form onSubmit={onSaveTodo}>
+				<label htmlFor="txt">Text:</label>
+				<input
+					onChange={handleChange}
+					value={txt}
+					type="text"
+					name="txt"
+					id="txt"
+				/>
 
-                <label htmlFor="isDone">isDone:</label>
-                <input onChange={handleChange} value={isDone} type="checkbox" name="isDone" id="isDone" />
+				<label htmlFor="importance">Importance:</label>
+				<input
+					onChange={handleChange}
+					value={importance}
+					type="number"
+					name="importance"
+					id="importance"
+				/>
 
+				<label htmlFor="isDone">isDone:</label>
+				<input
+					onChange={handleChange}
+					value={isDone}
+					type="checkbox"
+					name="isDone"
+					id="isDone"
+				/>
 
-                <button>Save</button>
-            </form>
-        </section>
-    )
+				<button>Save</button>
+			</form>
+		</section>
+	)
 }

@@ -12,6 +12,7 @@ export const IS_LOADING = "IS_LOADING"
 
 const initialState = {
 	todos: [],
+	selectedTodo: todoService.getEmptyTodo(),
 	filterBy: { txt: "", importance: 0 },
 	isLoading: false,
 }
@@ -22,6 +23,11 @@ export function todoReducer(state = initialState, cmd = {}) {
 			return {
 				...state,
 				todos: cmd.todos,
+			}
+		case GET_TODO:
+			return {
+				...state,
+				selectedTodo: cmd.todo,
 			}
 		case ADD_TODO:
 			return {
