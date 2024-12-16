@@ -1,10 +1,11 @@
+import { todoService } from "../services/todo.service.js"
+
 const { useState, useEffect } = React
 
-export function TodoFilter({ filterBy, onSetFilterBy }) {
-	const [filterByToEdit, setFilterByToEdit] = useState({ ...filterBy })
+export function TodoFilter({ filterBy, onSetFilterBy, onResetFilter }) {
+	const [filterByToEdit, setFilterByToEdit] = useState(filterBy)
 
 	useEffect(() => {
-		// Notify parent
 		onSetFilterBy(filterByToEdit)
 	}, [filterByToEdit])
 
@@ -28,13 +29,17 @@ export function TodoFilter({ filterBy, onSetFilterBy }) {
 		setFilterByToEdit((prevFilter) => ({ ...prevFilter, [field]: value }))
 	}
 
-	// Optional support for LAZY Filtering with a button
+	function setFilterReset() {
+		onResetFilter()
+		setFilterByToEdit(todoService.getDefaultFilter())
+	}
+
 	function onSubmitFilter(ev) {
 		ev.preventDefault()
 		onSetFilterBy(filterByToEdit)
 	}
 
-	const { txt, importance } = filterByToEdit
+	const { txt, importance, isDone } = filterBy
 	return (
 		<section className="todo-filter">
 			<h2>Filter Todos</h2>
@@ -56,9 +61,20 @@ export function TodoFilter({ filterBy, onSetFilterBy }) {
 					id="importance"
 					name="importance"
 				/>
+				<select
+					name="isDone"
+					id="is-done"
+					value={isDone}
+					onChange={handleChange}
+				>
+					<option value="All">All</option>
+					<option value="Active">Active</option>
+					<option value="Done">Done</option>
+				</select>
 
 				<button hidden>Set Filter</button>
 			</form>
+			<button onClick={(ev) => setFilterReset()}>Reset Filter</button>
 		</section>
 	)
 }

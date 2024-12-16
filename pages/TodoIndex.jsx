@@ -9,7 +9,7 @@ import {
 	SET_TODO,
 } from "../store/reducers/todo.reducer.js"
 // prettier-ignore
-import { loadTodos, setFilterBy, removeTodo,} from "../store/actions/todo.actions.js"
+import { loadTodos, setFilterBy, removeTodo, setIsLoading, saveTodo,} from "../store/actions/todo.actions.js"
 const { useSelector, useDispatch } = ReactRedux
 
 const { useState, useEffect } = React
@@ -18,25 +18,57 @@ const { Link, useSearchParams } = ReactRouterDOM
 export function TodoIndex() {
 	const todos = useSelector((storeState) => storeState.todoModule.todos)
 	const filterBy = useSelector((storeState) => storeState.todoModule.filterBy)
+	const IsLoading = useSelector((storeState) => storeState.todoModule.isLoading)
 	const dispatch = useDispatch()
 
 	// Special hook for accessing search-params:
 	const [searchParams, setSearchParams] = useSearchParams()
 
 	const defaultFilter = todoService.getFilterFromSearchParams(searchParams)
+	// console.log(defaultFilter)
+
+	// useEffect(() => {
+	// 	loadTodos()
+	// 		.then(() => {
+	// 			// if (defaultFilter !== filterBy) onSetFilterBy(defaultFilter)
+
+	// 			showSuccessMsg("Todos loaded successfully")
+	// 		})
+	// 		.catch((err) => {
+	// 			console.error("Error loading todos:", err)
+	// 			showErrorMsg("Cannot load todos")
+	// 		})
+	// }, [filterBy])
 
 	useEffect(() => {
+		let isFilterSet = false
+
+		if (
+			!isFilterSet &&
+			JSON.stringify(filterBy) !== JSON.stringify(defaultFilter)
+		) {
+			setFilterBy(defaultFilter)
+			setSearchParams(defaultFilter)
+			isFilterSet = true
+		}
+
 		loadTodos()
-			.then(() => showSuccessMsg("Todos loaded successfully"))
+			.then(() => {
+				showSuccessMsg("Todos loaded successfully")
+			})
 			.catch((err) => {
 				console.error("Error loading todos:", err)
 				showErrorMsg("Cannot load todos")
 			})
-	}, [filterBy])
+	}, [filterBy, setSearchParams])
 
 	function onSetFilterBy(filterBy) {
 		setFilterBy(filterBy)
 		setSearchParams(filterBy)
+	}
+
+	function onResetFilter() {
+		onSetFilterBy(todoService.getDefaultFilter())
 	}
 
 	function onRemoveTodo(todoId) {
@@ -44,25 +76,23 @@ export function TodoIndex() {
 			"Are you sure you want to delete this item?"
 		)
 		if (confirmed) {
-			//   dispatch(deleteItem(itemId));
+			setIsLoading(true)
 			removeTodo(todoId)
 				.then(() => {
-					dispatch({ type: REMOVE_TODO, todoId })
 					showSuccessMsg(`Todo removed`)
 				})
 				.catch((err) => {
 					console.log("err:", err)
 					showErrorMsg("Cannot remove todo " + todoId)
 				})
+				.finally(setIsLoading(false))
 		}
 	}
 
 	function onToggleTodo(todo) {
 		const todoToSave = { ...todo, isDone: !todo.isDone }
-		todoService
-			.save(todoToSave)
+		saveTodo(todoToSave)
 			.then((savedTodo) => {
-				dispatch({ type: UPDATE_TODO, todo: savedTodo })
 				showSuccessMsg(
 					`Todo is ${savedTodo.isDone ? "done" : "back on your list"}`
 				)
@@ -73,10 +103,14 @@ export function TodoIndex() {
 			})
 	}
 
-	if (!todos) return <div>Loading...</div>
+	if (IsLoading) return <div>Loading...</div>
 	return (
 		<section className="todo-index">
-			<TodoFilter filterBy={filterBy} onSetFilterBy={onSetFilterBy} />
+			<TodoFilter
+				filterBy={filterBy}
+				onSetFilterBy={onSetFilterBy}
+				onResetFilter={onResetFilter}
+			/>
 			<div>
 				<Link to="/todo/edit" className="btn">
 					Add Todo
@@ -87,6 +121,7 @@ export function TodoIndex() {
 				todos={todos}
 				onRemoveTodo={onRemoveTodo}
 				onToggleTodo={onToggleTodo}
+				defaultFilter={defaultFilter}
 			/>
 			<hr />
 			<h2>Todos Table</h2>

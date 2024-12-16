@@ -1,6 +1,11 @@
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
-import { saveTodo, setSelectedTodo } from "../store/actions/todo.actions.js"
+import {
+	loadTodos,
+	saveTodo,
+	setIsLoading,
+	setSelectedTodo,
+} from "../store/actions/todo.actions.js"
 
 const { useState, useEffect } = React
 const { useSelector } = ReactRedux
@@ -8,13 +13,22 @@ const { useNavigate, useParams } = ReactRouterDOM
 
 export function TodoEdit() {
 	let todo = useSelector((storeState) => storeState.todoModule.selectedTodo)
+	const isLoading = useSelector((storeState) => storeState.todoModule.isLoading)
 	const navigate = useNavigate()
 	const params = useParams()
 	const [todoToEdit, setTodoToEdit] = useState(todo)
 
 	useEffect(() => {
 		if (params.todoId) {
-			loadTodo()
+			setIsLoading(true)
+			loadTodos()
+				.then(setSelectedTodo(params.todoId))
+				.catch((err) => {
+					console.error("err:", err)
+					showErrorMsg("Cannot load todo")
+					navigate("/todo")
+				})
+				.finally(setIsLoading(false))
 		} else {
 			setTodoToEdit((todo) => (todo = todoService.getEmptyTodo()))
 		}
@@ -23,16 +37,6 @@ export function TodoEdit() {
 	useEffect(() => {
 		if (todo && params.todoId) setTodoToEdit({ ...todo })
 	}, [todo])
-
-	function loadTodo() {
-		try {
-			setSelectedTodo(params.todoId)
-		} catch (err) {
-			console.error("err:", err)
-			showErrorMsg("Cannot load todo")
-			navigate("/todo")
-		}
-	}
 
 	function handleChange({ target }) {
 		const field = target.name
@@ -57,6 +61,7 @@ export function TodoEdit() {
 
 	function onSaveTodo(ev) {
 		ev.preventDefault()
+		setIsLoading(true)
 		saveTodo(todoToEdit)
 			.then((savedTodo) => {
 				navigate("/todo")
@@ -66,9 +71,10 @@ export function TodoEdit() {
 				showErrorMsg("Cannot save todo")
 				console.log("err:", err)
 			})
+			.finally(setIsLoading(false))
 	}
 
-	if (!todoToEdit) return <div>Loading...</div>
+	if (isLoading) return <div>Loading...</div>
 
 	const { txt, importance, isDone } = todoToEdit
 

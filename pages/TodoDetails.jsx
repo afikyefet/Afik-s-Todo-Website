@@ -1,6 +1,10 @@
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg } from "../services/event-bus.service.js"
-import { setSelectedTodo } from "../store/actions/todo.actions.js"
+import {
+	loadTodos,
+	setIsLoading,
+	setSelectedTodo,
+} from "../store/actions/todo.actions.js"
 
 const { useState, useEffect } = React
 const { useSelector } = ReactRedux
@@ -8,22 +12,21 @@ const { useParams, useNavigate, Link } = ReactRouterDOM
 
 export function TodoDetails() {
 	const todo = useSelector((storeState) => storeState.todoModule.selectedTodo)
+	const isLoading = useSelector((storeState) => storeState.todoModule.isLoading)
 	const params = useParams()
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		loadTodo()
+		setIsLoading(true)
+		loadTodos()
+			.then(setSelectedTodo(params.todoId))
+			.catch((err) => {
+				console.error("err:", err)
+				showErrorMsg("Cannot load todo")
+				navigate("/todo")
+			})
+			.finally(setIsLoading(false))
 	}, [params.todoId])
-
-	function loadTodo() {
-		try {
-			setSelectedTodo(params.todoId)
-		} catch (err) {
-			console.error("err:", err)
-			showErrorMsg("Cannot load todo")
-			navigate("/todo")
-		}
-	}
 
 	function onBack() {
 		// If nothing to do here, better use a Link
@@ -31,7 +34,7 @@ export function TodoDetails() {
 		// navigate(-1)
 	}
 
-	if (!todo) return <div>Loading...</div>
+	if (isLoading) return <div>Loading...</div>
 	return (
 		<section className="todo-details">
 			<h1 className={todo.isDone ? "done" : ""}>{todo.txt}</h1>

@@ -54,7 +54,7 @@ export function todoReducer(state = initialState, cmd = {}) {
 		case IS_LOADING:
 			return {
 				...state,
-				isLoading: !state.isLoading,
+				isLoading: cmd.isLoading,
 			}
 		default:
 			return state
