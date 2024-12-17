@@ -31,6 +31,7 @@ export async function saveTodo(todo) {
 	return todoService
 		.save(todo)
 		.then((todo) => {
+			// if(type === UPDATE_TODO && )
 			store.dispatch({ type, todo })
 			return todo
 		})
