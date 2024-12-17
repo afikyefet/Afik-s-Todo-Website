@@ -23,8 +23,10 @@ function getById(userId) {
 function login({ username, password }) {
 	return storageService.query(STORAGE_KEY).then((users) => {
 		const user = users.find((user) => user.username === username)
-		if (user.password === password) return _setLoggedinUser(user)
-		else return Promise.reject("Invalid login")
+		if (user.password === password) {
+			_setLoggedinUser(user)
+			return user
+		} else return Promise.reject("Incorrect password")
 	})
 }
 
@@ -34,7 +36,10 @@ function signup({ username, password, fullname }) {
 	user.activities = []
 	user.balance = 10000
 
-	return storageService.post(STORAGE_KEY, user).then(_setLoggedinUser)
+	return storageService.post(STORAGE_KEY, user).then((user) => {
+		_setLoggedinUser(user)
+		return user
+	})
 }
 
 function logout() {
@@ -57,8 +62,6 @@ function getEmptyCredentials() {
 		fullname: "",
 		username: "muki",
 		password: "muki1",
-		balance: 10000,
-		activities: [],
 	}
 }
 

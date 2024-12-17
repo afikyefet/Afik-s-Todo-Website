@@ -5,27 +5,24 @@ const { useNavigate } = ReactRouter
 import { userService } from "../services/user.service.js"
 import { UserMsg } from "./UserMsg.jsx"
 import { LoginSignup } from "./LoginSignup.jsx"
-import { showErrorMsg } from "../services/event-bus.service.js"
+import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
+import { userLogout } from "../store/actions/user.actions.js"
+const { useSelector } = ReactRedux
 
 export function AppHeader() {
 	const navigate = useNavigate()
-	const [user, setUser] = useState(userService.getLoggedinUser())
+	const user = useSelector((storeState) => storeState.userModule.user)
+
+	// const [user, setUser] = useState(userService.getLoggedinUser())
+
+	console.log(user)
 
 	function onLogout() {
-		userService
-			.logout()
-			.then(() => {
-				onSetUser(null)
-			})
-			.catch((err) => {
-				showErrorMsg("OOPs try again")
-			})
+		userLogout().catch((err) => {
+			showErrorMsg("OOPs try again")
+		})
 	}
 
-	function onSetUser(user) {
-		setUser(user)
-		navigate("/")
-	}
 	return (
 		<header className="app-header full main-layout">
 			<section className="header-container">
@@ -33,11 +30,12 @@ export function AppHeader() {
 				{user ? (
 					<section>
 						<Link to={`/user/${user._id}`}>Hello {user.fullname}</Link>
+						<span> {user.balance}</span>
 						<button onClick={onLogout}>Logout</button>
 					</section>
 				) : (
 					<section>
-						<LoginSignup onSetUser={onSetUser} />
+						<LoginSignup />
 					</section>
 				)}
 				<nav className="app-nav">
