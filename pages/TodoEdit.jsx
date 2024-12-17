@@ -12,7 +12,7 @@ const { useSelector } = ReactRedux
 const { useNavigate, useParams } = ReactRouterDOM
 
 export function TodoEdit() {
-	let todo = useSelector((storeState) => storeState.todoModule.selectedTodo)
+	const todo = useSelector((storeState) => storeState.todoModule.selectedTodo)
 	const isLoading = useSelector((storeState) => storeState.todoModule.isLoading)
 	const navigate = useNavigate()
 	const params = useParams()
@@ -22,7 +22,7 @@ export function TodoEdit() {
 		if (params.todoId) {
 			setIsLoading(true)
 			loadTodos()
-				.then(setSelectedTodo(params.todoId))
+				.then(() => setSelectedTodo(params.todoId))
 				.catch((err) => {
 					console.error("err:", err)
 					showErrorMsg("Cannot load todo")
@@ -32,7 +32,7 @@ export function TodoEdit() {
 		} else {
 			setTodoToEdit((todo) => (todo = todoService.getEmptyTodo()))
 		}
-	}, [params.todoId, todo])
+	}, [params.todoId])
 
 	useEffect(() => {
 		if (todo && params.todoId) setTodoToEdit({ ...todo })
@@ -102,7 +102,7 @@ export function TodoEdit() {
 				<label htmlFor="isDone">isDone:</label>
 				<input
 					onChange={handleChange}
-					value={isDone}
+					checked={isDone}
 					type="checkbox"
 					name="isDone"
 					id="isDone"

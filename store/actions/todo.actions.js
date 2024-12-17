@@ -9,12 +9,14 @@ import {
 	UPDATE_TODO,
 } from "../reducers/todo.reducer.js"
 import { store } from "../store.js"
+import { userChangeBalance } from "./user.actions.js"
 
 export function loadTodos() {
 	return todoService
 		.query(store.getState().todoModule.filterBy)
 		.then((todos) => {
 			store.dispatch({ type: SET_TODO, todos })
+			return todos
 		})
 		.catch((err) => {
 			console.log("todo action -> Cannot load todos", err)
@@ -31,7 +33,10 @@ export async function saveTodo(todo) {
 	return todoService
 		.save(todo)
 		.then((todo) => {
-			// if(type === UPDATE_TODO && )
+			const prevTodo = store.getState().todoModule.selectedTodo
+			if (type === UPDATE_TODO && !prevTodo.isDone && todo.isDone) {
+				userChangeBalance(10)
+			}
 			store.dispatch({ type, todo })
 			return todo
 		})
@@ -46,18 +51,28 @@ export function setFilterBy(filterBy) {
 }
 
 export function setSelectedTodo(todoId) {
-	const todos = store.getState().todoModule.todos
-	const todo = todos.find((todo) => todo._id === todoId)
+	loadTodos()
+		.then((todos) => {
+			const todo = todos.find((todo) => todo._id === todoId)
+			if (!todo) {
+				console.error("Todo not found:", todoId)
+				return
+			}
 
-	const todoIdx = todos.findIndex((currTodo) => currTodo._id === todo._id)
-	const nextTodo = todos[todoIdx + 1] ? todos[todoIdx + 1] : todos[0]
-	const prevTodo = todos[todoIdx - 1]
-		? todos[todoIdx - 1]
-		: todos[todos.length - 1]
-	todo.nextTodoId = nextTodo._id
-	todo.prevTodoId = prevTodo._id
+			const todoIdx = todos.findIndex((currTodo) => currTodo._id === todo._id)
+			const nextTodo = todos[todoIdx + 1] ? todos[todoIdx + 1] : todos[0]
+			const prevTodo = todos[todoIdx - 1]
+				? todos[todoIdx - 1]
+				: todos[todos.length - 1]
+			todo.nextTodoId = nextTodo._id
+			todo.prevTodoId = prevTodo._id
 
-	return store.dispatch({ type: GET_TODO, todo })
+			return store.dispatch({ type: GET_TODO, todo })
+		})
+		.catch((err) => {
+			console.error("todo action -> could not get todo", err)
+			throw err
+		})
 }
 
 export function removeTodo(todoId) {

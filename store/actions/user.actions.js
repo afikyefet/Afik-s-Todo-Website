@@ -49,3 +49,15 @@ export function userLogout() {
 }
 
 // export function userUpdate(credentials) {}
+
+export function userChangeBalance(num) {
+	const user = store.getState().userModule.user
+	if (user) {
+		userService.store.dispatch({ type: CHANGE_BALANCE, diff: num })
+		console.log(user)
+
+		// userService.updateUser(user)
+	} else {
+		console.log("user action -> could not change user balance by ", num)
+	}
+}

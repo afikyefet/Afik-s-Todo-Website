@@ -15,8 +15,6 @@ export function AppHeader() {
 
 	// const [user, setUser] = useState(userService.getLoggedinUser())
 
-	console.log(user)
-
 	function onLogout() {
 		userLogout().catch((err) => {
 			showErrorMsg("OOPs try again")

@@ -7,6 +7,7 @@ export const userService = {
 	signup,
 	getById,
 	query,
+	updateUser,
 	getEmptyCredentials,
 }
 const STORAGE_KEY_LOGGEDIN = "user"
@@ -28,6 +29,10 @@ function login({ username, password }) {
 			return user
 		} else return Promise.reject("Incorrect password")
 	})
+}
+
+function updateUser(user) {
+	return storageService.put(STORAGE_KEY, user)
 }
 
 function signup({ username, password, fullname }) {
