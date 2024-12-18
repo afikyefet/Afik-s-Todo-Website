@@ -42,6 +42,7 @@ export function userLogin(credentials) {
 		.login(credentials)
 		.then((user) => {
 			store.dispatch({ type: LOG_IN, user })
+			console.log(user)
 		})
 		.catch((err) => {
 			console.error("user action -> could not log in", err)
@@ -61,7 +62,9 @@ export function userLogout() {
 		})
 }
 
-// export function userUpdate(credentials) {}
+// export function userUpdate(credentials) {
+// 	return userService.save
+// }
 
 export function userChangeBalance(num) {
 	const user = store.getState().userModule.user

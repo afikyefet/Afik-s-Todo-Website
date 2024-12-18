@@ -25,10 +25,7 @@ function login({ username, password }) {
 	return storageService.query(STORAGE_KEY).then((users) => {
 		const user = users.find((user) => user.username === username)
 		if (user.password === password) {
-			_setLoggedinUser(user)
-			console.log(user, "from login")
-
-			return user
+			return _setLoggedinUser(user)
 		} else return Promise.reject("Incorrect password")
 	})
 }
@@ -43,12 +40,7 @@ function signup({ username, password, fullname }) {
 	user.activities = []
 	user.balance = 10000
 
-	return storageService.post(STORAGE_KEY, user).then((user) => {
-		_setLoggedinUser(user)
-		console.log(user, "from signup")
-
-		return user
-	})
+	return storageService.post(STORAGE_KEY, user).then(_setLoggedinUser(user))
 }
 
 function logout() {
@@ -61,7 +53,14 @@ function getLoggedinUser() {
 }
 
 function _setLoggedinUser(user) {
-	const userToSave = { _id: user._id, fullname: user.fullname }
+	const userToSave = {
+		_id: user._id,
+		fullname: user.fullname,
+		balance: user.balance,
+		activities: user.activities,
+		createdAt: user.createdAt,
+		updatedAt: user.updatedAt,
+	}
 	sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
 	return userToSave
 }

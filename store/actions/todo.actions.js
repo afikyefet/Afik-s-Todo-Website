@@ -11,9 +11,9 @@ import {
 import { store } from "../store.js"
 import { userChangeBalance } from "./user.actions.js"
 
-export function loadTodos() {
+export function loadTodos(filterBy) {
 	return todoService
-		.query(store.getState().todoModule.filterBy)
+		.query(filterBy)
 		.then((todos) => {
 			store.dispatch({ type: SET_TODO, todos })
 			return todos
@@ -30,28 +30,10 @@ export function setIsLoading(isLoading) {
 
 export async function saveTodo(todo) {
 	const type = todo._id ? UPDATE_TODO : ADD_TODO
-	// return todoService
-	// 	.save(todo)
-	// 	.then((todo) => {
-	// 		const prevTodo = store.getState().todoModule.selectedTodo || {}
-	// 		if (type === UPDATE_TODO && !prevTodo.isDone && todo.isDone) {
-	// 			userChangeBalance(10)
-	// 		}
-	// 		store.dispatch({ type, todo })
-	// 		return todo
-	// 	})
-	// 	.catch((err) => {
-	// 		console.log("todo action -> could not save todo")
-	// 		throw err
-	// 	})
 
 	try {
 		const savedTodo = await todoService.save(todo)
 		const prevTodo = store.getState().todoModule.selectedTodo || {}
-
-		if (type === UPDATE_TODO && !prevTodo.isDone && savedTodo.isDone) {
-			userChangeBalance(10)
-		}
 
 		store.dispatch({ type, todo: savedTodo })
 		return savedTodo

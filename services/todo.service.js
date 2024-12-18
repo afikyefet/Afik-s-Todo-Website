@@ -95,6 +95,13 @@ function getImportanceStats() {
 	})
 }
 
+function getProgressPercentage(todos) {
+	const totalTodosNum = todos.length + 1
+	const doneTodosNum = todos.filter((todo) => todo.isDone).length + 1
+	const todoIsDonePercentage = Math.round(doneTodosNum / totalTodosNum)
+	return todoIsDonePercentage
+}
+
 function setQuickTodoAdd() {
 	const todo = _createTodo("quick todo", 5)
 	save(todo)

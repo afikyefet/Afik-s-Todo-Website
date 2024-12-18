@@ -19,26 +19,15 @@ export function TodoIndex() {
 	const todos = useSelector((storeState) => storeState.todoModule.todos)
 	const filterBy = useSelector((storeState) => storeState.todoModule.filterBy)
 	const IsLoading = useSelector((storeState) => storeState.todoModule.isLoading)
-	const dispatch = useDispatch()
 
 	// Special hook for accessing search-params:
 	const [searchParams, setSearchParams] = useSearchParams()
 
 	const defaultFilter = todoService.getFilterFromSearchParams(searchParams)
-	// console.log(defaultFilter)
 
-	// useEffect(() => {
-	// 	loadTodos()
-	// 		.then(() => {
-	// 			// if (defaultFilter !== filterBy) onSetFilterBy(defaultFilter)
-
-	// 			showSuccessMsg("Todos loaded successfully")
-	// 		})
-	// 		.catch((err) => {
-	// 			console.error("Error loading todos:", err)
-	// 			showErrorMsg("Cannot load todos")
-	// 		})
-	// }, [filterBy])
+	useEffect(() => {
+		console.log(todos)
+	}, [todos])
 
 	useEffect(() => {
 		let isFilterSet = false
@@ -52,8 +41,9 @@ export function TodoIndex() {
 			isFilterSet = true
 		}
 
-		loadTodos()
+		loadTodos(filterBy)
 			.then(() => {
+				console.log(todos)
 				showSuccessMsg("Todos loaded successfully")
 			})
 			.catch((err) => {

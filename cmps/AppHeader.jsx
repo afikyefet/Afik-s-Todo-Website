@@ -28,7 +28,9 @@ export function AppHeader() {
 	return (
 		<header className="app-header full main-layout">
 			<section className="header-container">
-				<h1>Afik Todo App</h1>
+				<h1>
+					<Link to="/">Afik Todo App</Link>
+				</h1>
 				{user ? (
 					<section>
 						<Link to={`/user/${user._id}`}>Hello {user.fullname}</Link>

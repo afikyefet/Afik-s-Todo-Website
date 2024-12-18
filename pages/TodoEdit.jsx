@@ -6,6 +6,7 @@ import {
 	setIsLoading,
 	setSelectedTodo,
 } from "../store/actions/todo.actions.js"
+import { userChangeBalance } from "../store/actions/user.actions.js"
 
 const { useState, useEffect } = React
 const { useSelector } = ReactRedux
@@ -59,19 +60,31 @@ export function TodoEdit() {
 		setTodoToEdit((prevTodo) => ({ ...prevTodo, [field]: value }))
 	}
 
-	function onSaveTodo(ev) {
+	async function onSaveTodo(ev) {
 		ev.preventDefault()
 		setIsLoading(true)
-		saveTodo(todoToEdit)
+		const isDone = await saveTodo(todoToEdit)
 			.then((savedTodo) => {
 				navigate("/todo")
 				showSuccessMsg(`Todo Saved (id: ${savedTodo._id})`)
+				return saveTodo.isDone
 			})
 			.catch((err) => {
 				showErrorMsg("Cannot save todo")
 				console.log("err:", err)
 			})
 			.finally(setIsLoading(false))
+		// 	if (isDone) {
+		// 		let currBalance = ...
+
+		// 		const userToUpdate = {
+		// 			...
+		// 			...
+		// 			bala
+
+		// 		}
+		// 	// userChangeBalance(10)
+		// }
 	}
 
 	if (isLoading) return <div>Loading...</div>
