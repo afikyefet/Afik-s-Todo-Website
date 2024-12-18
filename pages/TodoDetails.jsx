@@ -36,7 +36,7 @@ export function TodoDetails() {
 
 	if (isLoading) return <div>Loading...</div>
 	return (
-		<section className="todo-details">
+		<section className="todo-details" style={{ color: todo.color }}>
 			<h1 className={todo.isDone ? "done" : ""}>{todo.txt}</h1>
 			<h2>{todo.isDone ? "Done!" : "In your list"}</h2>
 

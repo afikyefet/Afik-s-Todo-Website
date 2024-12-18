@@ -68,7 +68,7 @@ function save(todo) {
 }
 
 function getEmptyTodo(txt = "", importance = 5) {
-	return { txt, importance, isDone: false }
+	return { txt, importance, isDone: false, color: "#000000" }
 }
 
 function getDefaultFilter() {
@@ -93,6 +93,11 @@ function getImportanceStats() {
 		}))
 		return data
 	})
+}
+
+function setQuickTodoAdd() {
+	const todo = _createTodo("quick todo", 5)
+	save(todo)
 }
 
 function _createTodos() {

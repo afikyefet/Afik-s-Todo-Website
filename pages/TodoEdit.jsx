@@ -76,7 +76,7 @@ export function TodoEdit() {
 
 	if (isLoading) return <div>Loading...</div>
 
-	const { txt, importance, isDone } = todoToEdit
+	const { txt, importance, isDone, color } = todoToEdit
 
 	return (
 		<section className="todo-edit">
@@ -106,6 +106,15 @@ export function TodoEdit() {
 					type="checkbox"
 					name="isDone"
 					id="isDone"
+				/>
+
+				<label htmlFor="color">Pick a color:</label>
+				<input
+					type="color"
+					onChange={handleChange}
+					name="color"
+					id="color"
+					value={color}
 				/>
 
 				<button>Save</button>
