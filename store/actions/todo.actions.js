@@ -46,19 +46,19 @@ export async function saveTodo(todo) {
 	// 	})
 
 	try {
-		const savedTodo = await todoService.save(todo);
-		const prevTodo = store.getState().todoModule.selectedTodo || {};
-	
+		const savedTodo = await todoService.save(todo)
+		const prevTodo = store.getState().todoModule.selectedTodo || {}
+
 		if (type === UPDATE_TODO && !prevTodo.isDone && savedTodo.isDone) {
-		  userChangeBalance(10);
+			userChangeBalance(10)
 		}
-	
-		store.dispatch({ type, todo: savedTodo });
-		return savedTodo;
-	  } catch (err) {
-		console.log("todo action -> could not save todo");
-		throw err;
-	  }
+
+		store.dispatch({ type, todo: savedTodo })
+		return savedTodo
+	} catch (err) {
+		console.log("todo action -> could not save todo")
+		throw err
+	}
 }
 
 export function setFilterBy(filterBy) {

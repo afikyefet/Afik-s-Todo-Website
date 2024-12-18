@@ -57,6 +57,7 @@ function remove(todoId) {
 function save(todo) {
 	if (todo._id) {
 		// TODO - updatable fields
+		// userChangeBalance(10)
 		todo.updatedAt = Date.now()
 		return storageService.put(TODO_KEY, todo)
 	} else {

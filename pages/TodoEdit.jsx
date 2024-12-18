@@ -26,7 +26,7 @@ export function TodoEdit() {
 				.catch((err) => {
 					console.error("err:", err)
 					showErrorMsg("Cannot load todo")
-					navigate("/todo")
+					navigate(-1)
 				})
 				.finally(setIsLoading(false))
 		} else {

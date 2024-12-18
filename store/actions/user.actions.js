@@ -24,6 +24,19 @@ export function userSignup(credentials) {
 		})
 }
 
+export async function setLoggedInUser() {
+	const loggedinUser = userService.getLoggedinUser()
+	if (loggedinUser) {
+		try {
+			const user = await userService.getById(loggedinUser._id)
+
+			store.dispatch({ type: LOG_IN, user })
+		} catch (error) {
+			console.error("Error fetching user by ID:", error)
+		}
+	}
+}
+
 export function userLogin(credentials) {
 	return userService
 		.login(credentials)
@@ -53,8 +66,9 @@ export function userLogout() {
 export function userChangeBalance(num) {
 	const user = store.getState().userModule.user
 	if (user) {
-		userService.store.dispatch({ type: CHANGE_BALANCE, diff: num })
-		console.log(user)
+		store.dispatch({ type: CHANGE_BALANCE, diff: num })
+		const updatedUser = store.getState().userModule.user
+		userService.updateUser(updatedUser)
 
 		// userService.updateUser(user)
 	} else {

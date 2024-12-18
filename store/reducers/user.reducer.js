@@ -9,7 +9,7 @@ export const SET_BALANCE = "SET_BALANCE"
 export const ADD_ACTIVITY = "ADD_ACTIVITY"
 
 const initialState = {
-	user: userService.getLoggedinUser(),
+	user: {},
 }
 
 export function userReducer(state = initialState, cmd = {}) {

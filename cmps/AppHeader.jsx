@@ -1,4 +1,4 @@
-const { useState } = React
+const { useState, useEffect } = React
 const { Link, NavLink } = ReactRouterDOM
 const { useNavigate } = ReactRouter
 
@@ -6,12 +6,16 @@ import { userService } from "../services/user.service.js"
 import { UserMsg } from "./UserMsg.jsx"
 import { LoginSignup } from "./LoginSignup.jsx"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
-import { userLogout } from "../store/actions/user.actions.js"
+import { setLoggedInUser, userLogout } from "../store/actions/user.actions.js"
 const { useSelector } = ReactRedux
 
 export function AppHeader() {
 	const navigate = useNavigate()
 	const user = useSelector((storeState) => storeState.userModule.user)
+
+	useEffect(() => {
+		setLoggedInUser()
+	}, [])
 
 	// const [user, setUser] = useState(userService.getLoggedinUser())
 

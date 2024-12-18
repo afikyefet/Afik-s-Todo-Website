@@ -26,6 +26,8 @@ function login({ username, password }) {
 		const user = users.find((user) => user.username === username)
 		if (user.password === password) {
 			_setLoggedinUser(user)
+			console.log(user, "from login")
+
 			return user
 		} else return Promise.reject("Incorrect password")
 	})
@@ -43,6 +45,8 @@ function signup({ username, password, fullname }) {
 
 	return storageService.post(STORAGE_KEY, user).then((user) => {
 		_setLoggedinUser(user)
+		console.log(user, "from signup")
+
 		return user
 	})
 }
