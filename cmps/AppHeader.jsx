@@ -8,7 +8,8 @@ import { LoginSignup } from "./LoginSignup.jsx"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { userLogout } from "../store/actions/user.actions.js"
 import { todoService } from "../services/todo.service.js"
-import { setProgressPercentage } from "../store/actions/todo.actions.js"
+// prettier-ignore
+import {loadTodos,setProgressPercentage,} from "../store/actions/todo.actions.js"
 const { useSelector } = ReactRedux
 
 export function AppHeader() {
@@ -17,9 +18,10 @@ export function AppHeader() {
 	const progressPercentage = useSelector(
 		(storeState) => storeState.todoModule.progressPercentage
 	)
-
 	useEffect(() => {
-		setProgressPercentage()
+		loadTodos().then((todos) => {
+			setProgressPercentage(todos)
+		})
 	}, [todos])
 
 	function onLogout() {

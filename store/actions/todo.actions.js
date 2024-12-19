@@ -76,12 +76,6 @@ export function setSelectedTodo(todoId) {
 		})
 }
 
-export function setProgressPercentage() {
-	const todos = store.getState().todoModule.todos
-	const percentage = todoService.getProgressPercentage(todos)
-	return store.dispatch({ type: SET_PROGRESS, percentage })
-}
-
 export function removeTodo(todoId) {
 	return todoService
 		.remove(todoId)
@@ -94,4 +88,9 @@ export function removeTodo(todoId) {
 			console.log("todo action -> could not delete todo", err)
 			throw err
 		})
+}
+
+export function setProgressPercentage(todos) {
+	const percentage = todoService.getProgressPercentage(todos)
+	return store.dispatch({ type: SET_PROGRESS, percentage })
 }

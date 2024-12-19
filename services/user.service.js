@@ -31,6 +31,7 @@ function login({ username, password }) {
 }
 
 function updateUser(user) {
+	sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(user))
 	return storageService.put(STORAGE_KEY, user)
 }
 
