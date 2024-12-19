@@ -6,7 +6,7 @@ import {
 	setSelectedTodo,
 } from "../store/actions/todo.actions.js"
 
-const { useState, useEffect } = React
+const { useEffect } = React
 const { useSelector } = ReactRedux
 const { useParams, useNavigate, Link } = ReactRouterDOM
 

@@ -5,13 +5,14 @@ import {
 	IS_LOADING,
 	REMOVE_TODO,
 	SET_FILTER,
+	SET_PROGRESS,
 	SET_TODO,
 	UPDATE_TODO,
 } from "../reducers/todo.reducer.js"
 import { store } from "../store.js"
-import { userChangeBalance } from "./user.actions.js"
+import { userAddActivity } from "./user.actions.js"
 
-export function loadTodos(filterBy) {
+export function loadTodos(filterBy = {}) {
 	return todoService
 		.query(filterBy)
 		.then((todos) => {
@@ -33,9 +34,12 @@ export async function saveTodo(todo) {
 
 	try {
 		const savedTodo = await todoService.save(todo)
-		const prevTodo = store.getState().todoModule.selectedTodo || {}
-
 		store.dispatch({ type, todo: savedTodo })
+		if (type === UPDATE_TODO) {
+			userAddActivity("Updated a todo")
+		} else if (type === ADD_TODO) {
+			userAddActivity("Added a todo")
+		}
 		return savedTodo
 	} catch (err) {
 		console.log("todo action -> could not save todo")
@@ -72,11 +76,18 @@ export function setSelectedTodo(todoId) {
 		})
 }
 
+export function setProgressPercentage() {
+	const todos = store.getState().todoModule.todos
+	const percentage = todoService.getProgressPercentage(todos)
+	return store.dispatch({ type: SET_PROGRESS, percentage })
+}
+
 export function removeTodo(todoId) {
 	return todoService
 		.remove(todoId)
 		.then(() => {
 			store.dispatch({ type: REMOVE_TODO, todoId })
+			userAddActivity("Deleted a todo")
 			return todoId
 		})
 		.catch((err) => {

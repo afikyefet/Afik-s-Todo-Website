@@ -1,34 +1,52 @@
 .app-header {
-    background-color: var(--clr1);
-    color: var(--clr2bg-light);
-    
+	background-color: var(--clr1);
+	color: var(--clr2bg-light);
 }
 
 .header-container {
-    display: flex;
-    align-items: center;
+	display: flex;
+	align-items: center;
+}
 
+.app-header .user-info .progress-container {
+	/* background-color: rgb(255, 255, 255); */
+	border: 2px solid var(--clr2bg-light);
+	border-radius: 12px;
+	margin: 2px;
+	height: 20px;
+	width: 100%;
+}
+
+.app-header .user-info .progress-container .progress-percentage {
+	background-color: var(--clr2bg-light);
+	border-radius: 12px;
+	height: 100%;
+	color: var(--clr1);
+	text-align: center;
+	font-weight: 800;
+	width: 0%;
+}
+.user-info {
+	margin: 8px;
 }
 
 .header-container h1 {
-    flex-grow: 1;
+	flex-grow: 1;
 }
 
 .app-nav {
-    display: flex;
-    gap: 15px;
+	display: flex;
+	gap: 15px;
 }
-
 
 a.active {
-    color: rgb(241, 212, 241);
-    font-weight: 600;
-    text-decoration: underline;
+	color: rgb(241, 212, 241);
+	font-weight: 600;
+	text-decoration: underline;
 }
 
-
 @media (max-width: 720px) {
-    .app-header {
-        color: var(--clr2bg-light);
-    }
+	.app-header {
+		color: var(--clr2bg-light);
+	}
 }

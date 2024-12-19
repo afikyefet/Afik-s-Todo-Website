@@ -12,6 +12,7 @@ export const todoService = {
 	getEmptyTodo,
 	getDefaultFilter,
 	getFilterFromSearchParams,
+	getProgressPercentage,
 	getImportanceStats,
 }
 // For Debug (easy access from console):
@@ -98,8 +99,12 @@ function getImportanceStats() {
 function getProgressPercentage(todos) {
 	const totalTodosNum = todos.length + 1
 	const doneTodosNum = todos.filter((todo) => todo.isDone).length + 1
-	const todoIsDonePercentage = Math.round(doneTodosNum / totalTodosNum)
-	return todoIsDonePercentage
+	const todoIsDonePercentage = Math.round((doneTodosNum / totalTodosNum) * 100)
+	if (totalTodosNum === 0 || doneTodosNum === 0) {
+		return 0
+	} else {
+		return todoIsDonePercentage
+	}
 }
 
 function setQuickTodoAdd() {

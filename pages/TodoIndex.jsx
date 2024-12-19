@@ -10,6 +10,7 @@ import {
 } from "../store/reducers/todo.reducer.js"
 // prettier-ignore
 import { loadTodos, setFilterBy, removeTodo, setIsLoading, saveTodo,} from "../store/actions/todo.actions.js"
+import { userUpdate } from "../store/actions/user.actions.js"
 const { useSelector, useDispatch } = ReactRedux
 
 const { useState, useEffect } = React
@@ -17,6 +18,7 @@ const { Link, useSearchParams } = ReactRouterDOM
 
 export function TodoIndex() {
 	const todos = useSelector((storeState) => storeState.todoModule.todos)
+	const user = useSelector((storeState) => storeState.userModule.user)
 	const filterBy = useSelector((storeState) => storeState.todoModule.filterBy)
 	const IsLoading = useSelector((storeState) => storeState.todoModule.isLoading)
 
@@ -24,10 +26,6 @@ export function TodoIndex() {
 	const [searchParams, setSearchParams] = useSearchParams()
 
 	const defaultFilter = todoService.getFilterFromSearchParams(searchParams)
-
-	useEffect(() => {
-		console.log(todos)
-	}, [todos])
 
 	useEffect(() => {
 		let isFilterSet = false
@@ -40,16 +38,16 @@ export function TodoIndex() {
 			setSearchParams(defaultFilter)
 			isFilterSet = true
 		}
-
+		setIsLoading(true)
 		loadTodos(filterBy)
 			.then(() => {
-				console.log(todos)
 				showSuccessMsg("Todos loaded successfully")
 			})
 			.catch((err) => {
 				console.error("Error loading todos:", err)
 				showErrorMsg("Cannot load todos")
 			})
+			.finally(setIsLoading(false))
 	}, [filterBy, setSearchParams])
 
 	function onSetFilterBy(filterBy) {
@@ -81,16 +79,20 @@ export function TodoIndex() {
 
 	function onToggleTodo(todo) {
 		const todoToSave = { ...todo, isDone: !todo.isDone }
+		setIsLoading(true)
 		saveTodo(todoToSave)
 			.then((savedTodo) => {
 				showSuccessMsg(
 					`Todo is ${savedTodo.isDone ? "done" : "back on your list"}`
 				)
+				if (savedTodo.isDone)
+					userUpdate({ ...user, balance: user.balance + 10 })
 			})
 			.catch((err) => {
 				console.log("err:", err)
 				showErrorMsg("Cannot toggle todo " + todoId)
 			})
+			.finally(setIsLoading(false))
 	}
 
 	if (IsLoading) return <div>Loading...</div>

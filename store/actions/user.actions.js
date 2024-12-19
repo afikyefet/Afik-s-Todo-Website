@@ -5,7 +5,6 @@ import {
 	LOG_IN,
 	LOG_OUT,
 	UPDATE_USER,
-	CHANGE_BALANCE,
 	SET_BALANCE,
 	ADD_ACTIVITY,
 } from "../reducers/user.reducer.js"
@@ -24,25 +23,11 @@ export function userSignup(credentials) {
 		})
 }
 
-export async function setLoggedInUser() {
-	const loggedinUser = userService.getLoggedinUser()
-	if (loggedinUser) {
-		try {
-			const user = await userService.getById(loggedinUser._id)
-
-			store.dispatch({ type: LOG_IN, user })
-		} catch (error) {
-			console.error("Error fetching user by ID:", error)
-		}
-	}
-}
-
 export function userLogin(credentials) {
 	return userService
 		.login(credentials)
 		.then((user) => {
 			store.dispatch({ type: LOG_IN, user })
-			console.log(user)
 		})
 		.catch((err) => {
 			console.error("user action -> could not log in", err)
@@ -62,19 +47,22 @@ export function userLogout() {
 		})
 }
 
-// export function userUpdate(credentials) {
-// 	return userService.save
-// }
+export function userUpdate(user) {
+	return userService
+		.updateUser(user)
+		.then((user) => {
+			store.dispatch({ type: UPDATE_USER, user })
+		})
+		.catch((err) => {
+			console.error("user action -> could not update user ", err)
+			throw err
+		})
+}
 
-export function userChangeBalance(num) {
+export function userAddActivity(activityTxt) {
 	const user = store.getState().userModule.user
-	if (user) {
-		store.dispatch({ type: CHANGE_BALANCE, diff: num })
-		const updatedUser = store.getState().userModule.user
-		userService.updateUser(updatedUser)
+	const activity = { txt: activityTxt, at: Date.now() }
+	const userToUpdate = { ...user, activities: [...user.activities, activity] }
 
-		// userService.updateUser(user)
-	} else {
-		console.log("user action -> could not change user balance by ", num)
-	}
+	return userUpdate(userToUpdate)
 }

@@ -5,6 +5,7 @@ export const REMOVE_TODO = "REMOVE_TODO"
 export const UPDATE_TODO = "UPDATE_TODO"
 export const SET_TODO = "SET_TODO"
 export const GET_TODO = "GET_TODO"
+export const SET_PROGRESS = "SET_PROGRESS"
 
 export const SET_FILTER = "SET_FILTER"
 
@@ -15,6 +16,7 @@ const initialState = {
 	selectedTodo: todoService.getEmptyTodo(),
 	filterBy: { txt: "", importance: 0 },
 	isLoading: false,
+	progressPercentage: 0,
 }
 
 export function todoReducer(state = initialState, cmd = {}) {
@@ -55,6 +57,11 @@ export function todoReducer(state = initialState, cmd = {}) {
 			return {
 				...state,
 				isLoading: cmd.isLoading,
+			}
+		case SET_PROGRESS:
+			return {
+				...state,
+				progressPercentage: cmd.percentage,
 			}
 		default:
 			return state

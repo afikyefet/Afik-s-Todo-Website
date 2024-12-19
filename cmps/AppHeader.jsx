@@ -6,18 +6,21 @@ import { userService } from "../services/user.service.js"
 import { UserMsg } from "./UserMsg.jsx"
 import { LoginSignup } from "./LoginSignup.jsx"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
-import { setLoggedInUser, userLogout } from "../store/actions/user.actions.js"
+import { userLogout } from "../store/actions/user.actions.js"
+import { todoService } from "../services/todo.service.js"
+import { setProgressPercentage } from "../store/actions/todo.actions.js"
 const { useSelector } = ReactRedux
 
 export function AppHeader() {
-	const navigate = useNavigate()
 	const user = useSelector((storeState) => storeState.userModule.user)
+	const todos = useSelector((storeState) => storeState.todoModule.todos)
+	const progressPercentage = useSelector(
+		(storeState) => storeState.todoModule.progressPercentage
+	)
 
 	useEffect(() => {
-		setLoggedInUser()
-	}, [])
-
-	// const [user, setUser] = useState(userService.getLoggedinUser())
+		setProgressPercentage()
+	}, [todos])
 
 	function onLogout() {
 		userLogout().catch((err) => {
@@ -32,10 +35,19 @@ export function AppHeader() {
 					<Link to="/">Afik Todo App</Link>
 				</h1>
 				{user ? (
-					<section>
+					<section className="user-info">
 						<Link to={`/user/${user._id}`}>Hello {user.fullname}</Link>
 						<span> {user.balance}</span>
 						<button onClick={onLogout}>Logout</button>
+						<section className="progress-bar">
+							Todo progress: {progressPercentage}%
+							<div className="progress-container">
+								<div
+									className="progress-percentage"
+									style={{ width: `${progressPercentage}%` }}
+								></div>
+							</div>
+						</section>
 					</section>
 				) : (
 					<section>
