@@ -14,6 +14,7 @@ export const todoService = {
 	getFilterFromSearchParams,
 	getProgressPercentage,
 	getImportanceStats,
+	getQuickTodo,
 }
 // For Debug (easy access from console):
 window.cs = todoService
@@ -55,10 +56,9 @@ function remove(todoId) {
 	return storageService.remove(TODO_KEY, todoId)
 }
 
-function save(todo) {
-	if (todo._id) {
+function save(todo, isUpdate = true) {
+	if (todo._id && isUpdate) {
 		// TODO - updatable fields
-		// userChangeBalance(10)
 		todo.updatedAt = Date.now()
 		return storageService.put(TODO_KEY, todo)
 	} else {
@@ -110,7 +110,12 @@ function getProgressPercentage(todos) {
 
 function setQuickTodoAdd() {
 	const todo = _createTodo("quick todo", 5)
-	save(todo)
+	return save(todo)
+}
+
+function getQuickTodo(){
+	const num = utilService.getRandomIntInclusive(0,10)
+	return _createTodo('Quick Todo', num)
 }
 
 function _createTodos() {

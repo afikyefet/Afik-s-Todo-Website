@@ -10,10 +10,6 @@ export function LoginSignup() {
 		userService.getEmptyCredentials()
 	)
 
-	// useEffect(() => {
-	// 	if (userService.getLoggedinUser()) {
-	// 	}
-	// }, [])
 
 	function handleChange({ target }) {
 		const { name: field, value } = target
@@ -31,7 +27,7 @@ export function LoginSignup() {
 
 	function login(credentials) {
 		userLogin(credentials)
-			.then(() => {
+			.then((user) => {
 				showSuccessMsg("Logged in successfully")
 			})
 			.catch((err) => {
@@ -41,8 +37,12 @@ export function LoginSignup() {
 
 	function signup(credentials) {
 		userSignup(credentials)
-			.then(() => {
-				showSuccessMsg("Signed in successfully")
+			.then((user) => {
+				if(user === -1){
+					showErrorMsg("User name already in use")
+				}else {
+					showSuccessMsg("Signed in successfully")
+				}
 			})
 			.catch((err) => {
 				showErrorMsg("Oops try again")

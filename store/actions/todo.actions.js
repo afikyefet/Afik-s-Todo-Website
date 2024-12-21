@@ -17,6 +17,7 @@ export function loadTodos(filterBy = {}) {
 		.query(filterBy)
 		.then((todos) => {
 			store.dispatch({ type: SET_TODO, todos })
+			setProgressPercentage()
 			return todos
 		})
 		.catch((err) => {
@@ -29,16 +30,16 @@ export function setIsLoading(isLoading) {
 	store.dispatch({ type: IS_LOADING, isLoading })
 }
 
-export async function saveTodo(todo) {
-	const type = todo._id ? UPDATE_TODO : ADD_TODO
+export async function saveTodo(todo, isUpdate = true) {
+	const type = todo._id && isUpdate ? UPDATE_TODO : ADD_TODO
 
 	try {
-		const savedTodo = await todoService.save(todo)
+		const savedTodo = await todoService.save(todo, isUpdate)
 		store.dispatch({ type, todo: savedTodo })
-		if (type === UPDATE_TODO) {
-			userAddActivity("Updated a todo")
+		if (type === UPDATE_TODO &&  isUpdate) {
+			userAddActivity("Updated a todo: "+ todo.txt)
 		} else if (type === ADD_TODO) {
-			userAddActivity("Added a todo")
+			userAddActivity("Added a todo: "+ todo.txt)
 		}
 		return savedTodo
 	} catch (err) {
@@ -67,7 +68,6 @@ export function setSelectedTodo(todoId) {
 				: todos[todos.length - 1]
 			todo.nextTodoId = nextTodo._id
 			todo.prevTodoId = prevTodo._id
-
 			return store.dispatch({ type: GET_TODO, todo })
 		})
 		.catch((err) => {
@@ -76,12 +76,15 @@ export function setSelectedTodo(todoId) {
 		})
 }
 
-export function removeTodo(todoId) {
+export async function removeTodo(todoId) {
+	const todo =  await todoService.get(todoId)
+	console.log(todo);
+	
 	return todoService
 		.remove(todoId)
 		.then(() => {
+			userAddActivity("Deleted a todo: "+ todo.txt)
 			store.dispatch({ type: REMOVE_TODO, todoId })
-			userAddActivity("Deleted a todo")
 			return todoId
 		})
 		.catch((err) => {
@@ -91,6 +94,9 @@ export function removeTodo(todoId) {
 }
 
 export function setProgressPercentage(todos) {
-	const percentage = todoService.getProgressPercentage(todos)
-	return store.dispatch({ type: SET_PROGRESS, percentage })
+	todoService.query({})
+	.then((todos)=>{
+		const percentage = todoService.getProgressPercentage(todos)
+		return store.dispatch({ type: SET_PROGRESS, percentage })
+	})
 }

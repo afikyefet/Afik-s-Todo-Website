@@ -4,6 +4,7 @@ import {
 	loadTodos,
 	saveTodo,
 	setIsLoading,
+	setProgressPercentage,
 	setSelectedTodo,
 } from "../store/actions/todo.actions.js"
 import { userChangeBalance, userUpdate } from "../store/actions/user.actions.js"
@@ -70,6 +71,7 @@ export function TodoEdit() {
 				showSuccessMsg(`Todo Saved (id: ${savedTodo._id})`)
 				if (savedTodo.isDone)
 					userUpdate({ ...user, balance: user.balance + 10 })
+				setProgressPercentage()
 			})
 			.catch((err) => {
 				showErrorMsg("Cannot save todo")

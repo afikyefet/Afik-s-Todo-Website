@@ -14,15 +14,12 @@ const { useSelector } = ReactRedux
 
 export function AppHeader() {
 	const user = useSelector((storeState) => storeState.userModule.user)
-	const todos = useSelector((storeState) => storeState.todoModule.todos)
 	const progressPercentage = useSelector(
 		(storeState) => storeState.todoModule.progressPercentage
 	)
 	useEffect(() => {
-		loadTodos().then((todos) => {
-			setProgressPercentage(todos)
-		})
-	}, [todos])
+		loadTodos()
+	}, [])
 
 	function onLogout() {
 		userLogout().catch((err) => {

@@ -9,7 +9,7 @@ import {
 	SET_TODO,
 } from "../store/reducers/todo.reducer.js"
 // prettier-ignore
-import { loadTodos, setFilterBy, removeTodo, setIsLoading, saveTodo,} from "../store/actions/todo.actions.js"
+import { loadTodos, setFilterBy, removeTodo, setIsLoading, saveTodo, setProgressPercentage,} from "../store/actions/todo.actions.js"
 import { userUpdate } from "../store/actions/user.actions.js"
 const { useSelector, useDispatch } = ReactRedux
 
@@ -68,6 +68,7 @@ export function TodoIndex() {
 			removeTodo(todoId)
 				.then(() => {
 					showSuccessMsg(`Todo removed`)
+					setProgressPercentage()
 				})
 				.catch((err) => {
 					console.log("err:", err)
@@ -85,12 +86,29 @@ export function TodoIndex() {
 				showSuccessMsg(
 					`Todo is ${savedTodo.isDone ? "done" : "back on your list"}`
 				)
-				if (savedTodo.isDone)
-					userUpdate({ ...user, balance: user.balance + 10 })
+				if (savedTodo.isDone) userUpdate({ ...user, balance: user.balance + 10 })
+				setProgressPercentage()
 			})
 			.catch((err) => {
 				console.log("err:", err)
 				showErrorMsg("Cannot toggle todo " + todoId)
+			})
+			.finally(setIsLoading(false))
+	}
+
+	async function addQuickTodo(){
+		const todo = todoService.getQuickTodo()
+		console.log(todo);
+		
+		setIsLoading(true)
+		await saveTodo(todo, false)
+			.then((savedTodo) => {
+				showSuccessMsg(`Todo Saved (id: ${savedTodo._id})`)
+				setProgressPercentage()
+			})
+			.catch((err) => {
+				showErrorMsg("Cannot save todo")
+				console.log("err:", err)
 			})
 			.finally(setIsLoading(false))
 	}
@@ -107,6 +125,7 @@ export function TodoIndex() {
 				<Link to="/todo/edit" className="btn">
 					Add Todo
 				</Link>
+				<button className="btn" onClick={()=>addQuickTodo()}>Add Quick Todo</button>
 			</div>
 			<h2>Todos List</h2>
 			<TodoList

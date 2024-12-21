@@ -7,9 +7,11 @@ export const UPDATE_USER = "UPDATE_USER"
 export const CHANGE_BALANCE = "CHANGE_BALANCE"
 export const SET_BALANCE = "SET_BALANCE"
 export const ADD_ACTIVITY = "ADD_ACTIVITY"
+export const USER_LOADING = "USER_LOADING"
 
 const initialState = {
 	user: userService.getLoggedinUser(),
+	userLoading: false
 }
 
 export function userReducer(state = initialState, cmd = {}) {
@@ -51,6 +53,11 @@ export function userReducer(state = initialState, cmd = {}) {
 					...state.user,
 					activities: [...state.user.activities, cmd.activity],
 				},
+			}
+		case USER_LOADING:
+			return {
+				...state,
+				userLoading: cmd.isLoading
 			}
 		default:
 			return state

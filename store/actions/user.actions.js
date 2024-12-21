@@ -1,11 +1,11 @@
 import { userService } from "../../services/user.service.js"
-
 import {
 	SIGN_UP,
 	LOG_IN,
 	LOG_OUT,
 	UPDATE_USER,
 	SET_BALANCE,
+	USER_LOADING,
 	ADD_ACTIVITY,
 } from "../reducers/user.reducer.js"
 import { store } from "../store.js"
@@ -24,6 +24,7 @@ export function userSignup(credentials) {
 }
 
 export function userLogin(credentials) {
+	setUserLoading(true)
 	return userService
 		.login(credentials)
 		.then((user) => {
@@ -33,6 +34,7 @@ export function userLogin(credentials) {
 			console.error("user action -> could not log in", err)
 			throw err
 		})
+		.finally(setUserLoading(false))
 }
 
 export function userLogout() {
@@ -48,6 +50,7 @@ export function userLogout() {
 }
 
 export function userUpdate(user) {
+	setUserLoading(true)
 	return userService
 		.updateUser(user)
 		.then((user) => {
@@ -57,6 +60,7 @@ export function userUpdate(user) {
 			console.error("user action -> could not update user ", err)
 			throw err
 		})
+		.finally(setUserLoading(false))
 }
 
 export function userAddActivity(activityTxt) {
@@ -65,4 +69,8 @@ export function userAddActivity(activityTxt) {
 	const userToUpdate = { ...user, activities: [...user.activities, activity] }
 
 	return userUpdate(userToUpdate)
+}
+
+export function setUserLoading(isLoading){
+	return store.dispatch({type: USER_LOADING, isLoading})
 }
