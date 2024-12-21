@@ -98,7 +98,6 @@ export function TodoIndex() {
 
 	async function addQuickTodo(){
 		const todo = todoService.getQuickTodo()
-		console.log(todo);
 		
 		setIsLoading(true)
 		await saveTodo(todo, false)

@@ -11,6 +11,7 @@ import {
 } from "../reducers/todo.reducer.js"
 import { store } from "../store.js"
 import { userAddActivity } from "./user.actions.js"
+const user = store.getState().userModule.user
 
 export function loadTodos(filterBy = {}) {
 	return todoService
@@ -78,12 +79,11 @@ export function setSelectedTodo(todoId) {
 
 export async function removeTodo(todoId) {
 	const todo =  await todoService.get(todoId)
-	console.log(todo);
 	
 	return todoService
 		.remove(todoId)
 		.then(() => {
-			userAddActivity("Deleted a todo: "+ todo.txt)
+			if(user) userAddActivity("Deleted a todo: "+ todo.txt)
 			store.dispatch({ type: REMOVE_TODO, todoId })
 			return todoId
 		})

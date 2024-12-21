@@ -1,6 +1,6 @@
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { userService } from "../services/user.service.js"
-import { setUserLoading } from "../store/actions/user.actions.js"
+import { setUserLoading, userUpdate } from "../store/actions/user.actions.js"
 
 const { useEffect , useState} = React
 const { useSelector } = ReactRedux
@@ -16,24 +16,75 @@ export function UserDetails() {
 		setUserLoading(true)
 		userService.getByIdSafe(userId)
 		.then(user => {
-			setUserPage(userPage => userPage = user)
+			setUserPage(userPage => userPage = user)			
 			showSuccessMsg('user loaded')
 		})
 		.catch(err => {
 			console.error('could not load user' , err);
 			showErrorMsg("Could not find user")
 		})
-		.finally(setUserLoading(false))		
+		.finally(()=>setUserLoading(false))
 	},[userId])
 
 
-	
+	function handleChange({ target }) {
+		const field = target.name
+		let value = target.value
+
+		switch (target.type) {
+			case "number":
+			case "range":
+				value = +value || ""
+				break
+
+			case "checkbox":
+				value = target.checked
+				break
+
+			default:
+				break
+		}
+        setUserPage((prevUserPage) => ({
+            ...prevUserPage,
+            prefs: {
+                ...prevUserPage.prefs,
+                [field]: value,
+            },
+            [field]: field === "fullname" ? value : prevUserPage.fullname,
+        }))
+	}
+
+	function saveUserPrefs(ev){
+		ev.preventDefault()
+		userUpdate(userPage)
+		.then(() => {
+			showSuccessMsg("Preferences saved successfully");
+		})
+		.catch((err) => {
+			console.error("Failed to save preferences", err);
+			showErrorMsg("Could not save preferences");
+		});
+	}
 	
 	if(userLoading){
 		return <div>Loading...</div>
-	}else if(user && user._id === userId){
-	return <section className="user-details"> 
-	<h1>You are the user logged in</h1>
+	}else if(user && user._id === userId && userPage){
+	return <section className="user-details"  
+	style={{
+		color: user.prefs.color,
+		backgroundColor: user.prefs.bgColor,
+	}}> 
+	<form className="user-edit" onSubmit={(ev)=>saveUserPrefs(ev)}>
+		<label htmlFor="fullname">Name: </label>
+		<input type="text" name="fullname" value={userPage.fullname} onChange={handleChange}/>
+
+		<label htmlFor="color"> Color: </label>
+		<input type="color" name="color" value={userPage.prefs.color}  onChange={handleChange}/>
+
+		<label htmlFor="bgColor"> BG Color: </label>
+		<input type="color" name="bgColor" value={userPage.prefs.bgColor}  onChange={handleChange}/>
+		<button>Save</button>
+	</form>
 	<h1>{user.fullname}</h1>
 	<h2>{user.balance}</h2>
 	<ul>

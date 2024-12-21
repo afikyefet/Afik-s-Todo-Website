@@ -47,7 +47,6 @@ function updateUser(user) {
 async function signup({ username, password, fullname }) {
 	const userList = await storageService.query(STORAGE_KEY)
 	const exist = userList.some(user => user.username === username)
-	console.log(exist);
 	
 	if(exist){
 		return Promise.reject("Username already exists")
@@ -55,6 +54,7 @@ async function signup({ username, password, fullname }) {
 	const user = { username, password, fullname }
 	user.createdAt = user.updatedAt = Date.now()
 	user.activities = []
+	user.prefs = {color: '#000000', bgColor: '#ffffff'}
 	user.balance = 10000
 	try {
         const savedUser = await storageService.post(STORAGE_KEY, user)
@@ -84,6 +84,7 @@ function _setLoggedinUser(user) {
 		activities: user.activities,
 		createdAt: user.createdAt,
 		updatedAt: user.updatedAt,
+		prefs: user.prefs
 	}
 	sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
 	return userToSave
