@@ -19,7 +19,7 @@ export function RootCmp() {
 		<Provider store={store}>
 			<Router>
 				<section className="app main-layout">
-					<AppHeader />
+					<AppHeader className="main-layout" />
 					<main>
 						<Routes>
 							<Route path="/" element={<Home />} />

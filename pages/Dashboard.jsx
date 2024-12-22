@@ -16,7 +16,7 @@ export function Dashboard() {
 
 
     return (
-        <section className="dashboard">
+        <section className="dashboard" >
             <h1>Dashboard</h1>
             <h2>Statistics for {todos.length} Todos</h2>
             <hr />

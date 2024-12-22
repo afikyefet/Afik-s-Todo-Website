@@ -42,7 +42,7 @@ function query(filterBy = {}) {
 			}
 		}
 
-		const sortOrder = filterBy.descending ? -1 : 1;
+		const sortOrder = filterBy.descending ==='true' ? -1 : 1;
 		if (filterBy.sortBy === "alphabet") {
             todos.sort((a, b) => sortOrder * a.txt.localeCompare(b.txt));
         } else if (filterBy.sortBy === "importance") {
