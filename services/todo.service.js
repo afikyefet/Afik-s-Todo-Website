@@ -2,7 +2,7 @@ import { utilService } from "./util.service.js"
 import { storageService } from "./async-storage.service.js"
 
 const TODO_KEY = "todoDB"
-_createTodos()
+// _createTodos()
 
 export const todoService = {
 	query,
@@ -15,6 +15,7 @@ export const todoService = {
 	getProgressPercentage,
 	getImportanceStats,
 	getQuickTodo,
+	createUserTodos,
 }
 // For Debug (easy access from console):
 window.cs = todoService
@@ -124,6 +125,20 @@ function _createTodos() {
 		todos = []
 		const txts = ["Learn React", "Master CSS", "Practice Redux"]
 		for (let i = 0; i < 20; i++) {
+			const txt = txts[utilService.getRandomIntInclusive(0, txts.length - 1)]
+			todos.push(
+				_createTodo(txt + (i + 1), utilService.getRandomIntInclusive(1, 10))
+			)
+		}
+		utilService.saveToStorage(TODO_KEY, todos)
+	}
+}
+function createUserTodos(userId, num = 7) {
+	let todos = utilService.loadFromStorage(TODO_KEY)
+	if (!todos || !todos.length) {
+		todos = []
+		const txts = ["Learn React", "Master CSS", "Practice Redux"]
+		for (let i = 0; i < num; i++) {
 			const txt = txts[utilService.getRandomIntInclusive(0, txts.length - 1)]
 			todos.push(
 				_createTodo(txt + (i + 1), utilService.getRandomIntInclusive(1, 10))

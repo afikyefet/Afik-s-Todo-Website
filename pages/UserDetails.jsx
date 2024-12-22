@@ -12,7 +12,7 @@ export function UserDetails() {
 	const userId = useParams().userId
 	const [userPage, setUserPage] = useState(null)
 
-	useEffect(()=>{
+	useEffect(()=>{		
 		setUserLoading(true)
 		userService.getByIdSafe(userId)
 		.then(user => {
@@ -97,7 +97,10 @@ export function UserDetails() {
 	</ul>
 	</section>
 	}else if(userPage){
-		return <section className="user-details"> 
+		return <section className="user-details" style={{
+			color: userPage.prefs.color,
+			backgroundColor: userPage.prefs.bgColor,
+		}}> 
 		<h1>{userPage.fullname}</h1>
 		<h2>{userPage.balance}</h2>
 		<ul>

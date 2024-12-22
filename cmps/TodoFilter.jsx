@@ -1,24 +1,23 @@
 import { todoService } from "../services/todo.service.js"
+import { debounce } from "../services/util.service.js"
 
-const { useState, useEffect } = React
+const { useState, useEffect, useRef } = React
 
 export function TodoFilter({ filterBy, onSetFilterBy, onResetFilter }) {
 	const [filterByToEdit, setFilterByToEdit] = useState(filterBy)
+	const onSetFilterDebaunce = useRef(debounce(onSetFilterBy)).current
 
 	useEffect(() => {
-		onSetFilterBy(filterByToEdit)
+		onSetFilterDebaunce(filterByToEdit)
 	}, [filterByToEdit])
 
 	function handleChange({ target }) {
-		const field = target.name
-		let value = target.value
-
+		let { value, name: field } = target
 		switch (target.type) {
 			case "number":
 			case "range":
 				value = +value || ""
 				break
-
 			case "checkbox":
 				value = target.checked
 				break
