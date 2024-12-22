@@ -42,6 +42,14 @@ function query(filterBy = {}) {
 			}
 		}
 
+		const sortOrder = filterBy.descending ? -1 : 1;
+		if (filterBy.sortBy === "alphabet") {
+            todos.sort((a, b) => sortOrder * a.txt.localeCompare(b.txt));
+        } else if (filterBy.sortBy === "importance") {
+            todos.sort((a, b) => sortOrder * (a.importance - b.importance));
+        }
+
+
 		return todos
 	})
 }
@@ -74,7 +82,7 @@ function getEmptyTodo(txt = "", importance = 5) {
 }
 
 function getDefaultFilter() {
-	return { txt: "", importance: 0, isDone: "All" }
+	return { txt: "", importance: 0, isDone: "All", sortBy:"none", descending: false }
 }
 
 function getFilterFromSearchParams(searchParams) {

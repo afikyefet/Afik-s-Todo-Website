@@ -38,7 +38,7 @@ export function TodoFilter({ filterBy, onSetFilterBy, onResetFilter }) {
 		onSetFilterBy(filterByToEdit)
 	}
 
-	const { txt, importance, isDone } = filterByToEdit
+	const { txt, importance, isDone, sortBy, descending } = filterByToEdit
 	return (
 		<section className="todo-filter">
 			<h2>Filter Todos</h2>
@@ -60,6 +60,7 @@ export function TodoFilter({ filterBy, onSetFilterBy, onResetFilter }) {
 					id="importance"
 					name="importance"
 				/>
+					<label htmlFor="is-done">Show:</label>
 				<select
 					name="isDone"
 					id="is-done"
@@ -70,7 +71,26 @@ export function TodoFilter({ filterBy, onSetFilterBy, onResetFilter }) {
 					<option value="Active">Active</option>
 					<option value="Done">Done</option>
 				</select>
-
+				<label htmlFor="sort-by">Sort by:</label>
+				<select
+				name="sortBy"
+				id="sort-by"
+				value={sortBy}
+				onChange={handleChange}
+				>
+					<option name="none" id="none">none</option>
+					<option name="importance" id="importance">importance </option>
+					<option name="alphabet" id="alphabet">alphabet</option>
+				</select>
+				<label htmlFor="descending">descending:</label>
+				<input
+					onChange={handleChange}
+					checked={descending}
+					value={descending}
+					type="checkbox"
+					name="descending"
+					id="descending"
+				/>
 				<button hidden>Set Filter</button>
 			</form>
 			<button onClick={(ev) => setFilterReset()}>Reset Filter</button>
