@@ -86,12 +86,12 @@ export function TodoIndex() {
 				showSuccessMsg(
 					`Todo is ${savedTodo.isDone ? "done" : "back on your list"}`
 				)
-				if (savedTodo.isDone) userUpdate({ ...user, balance: user.balance + 10 })
+				if (savedTodo.isDone && user) userUpdate({ ...user, balance: user.balance + 10 })
 				setProgressPercentage()
 			})
 			.catch((err) => {
 				console.log("err:", err)
-				showErrorMsg("Cannot toggle todo " + todoId)
+				showErrorMsg("Cannot toggle todo " + todo._id)
 			})
 			.finally(setIsLoading(false))
 	}

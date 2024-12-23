@@ -1,0 +1,45 @@
+@use '../setup/vars';
+
+
+.todo-list {
+    padding: 5px 0 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+  
+    li {
+      background-color: vars.$clr1-bg;
+      grid-column: 1/-1;
+
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+
+      .todo-preview{
+        grid-column: 1 / 2;
+        display: grid;
+        align-items: center;
+        gap:15px;
+        // grid-template-columns: subgrid;
+        // grid-column: 1;
+        
+        .todo-importance{
+          grid-column: 1;
+          font-size: 2em;
+          font-weight: 300;
+          margin: 14px;
+        }
+
+        .todo-name {
+          grid-column: 2;
+        }
+
+      }
+
+      .btn-container{
+        grid-column: 3;
+        justify-self: end;
+      }
+    }
+  }

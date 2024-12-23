@@ -34,12 +34,12 @@ export function setIsLoading(isLoading) {
 export async function saveTodo(todo, isUpdate = true) {
 	const type = todo._id && isUpdate ? UPDATE_TODO : ADD_TODO
 
-	try {
+	try {		
 		const savedTodo = await todoService.save(todo, isUpdate)
 		store.dispatch({ type, todo: savedTodo })
-		if (type === UPDATE_TODO &&  isUpdate) {
+		if (type === UPDATE_TODO &&  isUpdate && user) {
 			userAddActivity("Updated a todo: "+ todo.txt)
-		} else if (type === ADD_TODO) {
+		} else if (type === ADD_TODO && user) {
 			userAddActivity("Added a todo: "+ todo.txt)
 		}
 		return savedTodo

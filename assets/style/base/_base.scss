@@ -2,6 +2,8 @@
 @use "../setup/vars";
 * {
   box-sizing: border-box;
+  font-family: "Roboto", cursive;
+
 }
 
 body {
@@ -11,7 +13,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0.5em 0 0.5em;
-  font-family: "DM Serif Text", cursive;
+  font-family: "Outfit", cursive;
 }
 
 p {
