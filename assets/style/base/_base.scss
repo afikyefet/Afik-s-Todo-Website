@@ -1,0 +1,44 @@
+
+@use "../setup/vars";
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: vars.$gray3;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0.5em 0 0.5em;
+  font-family: "DM Serif Text", cursive;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  text-decoration: none;
+  color: unset;
+  cursor: pointer;
+}
+
+/* Don't stretch media */
+img, embed, video, object {
+  max-width: 100%;
+}
+
+/* Debugging */
+.debug * {
+  outline: 1px solid gold;
+}
+
+.about nav a {
+  margin-right: 10px;
+}
+
+.done {
+  text-decoration: line-through;
+  font-style: italic;
+}

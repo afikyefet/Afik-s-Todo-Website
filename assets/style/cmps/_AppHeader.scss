@@ -1,0 +1,65 @@
+
+@use '../setup/vars';
+
+.app-header {
+    background-color: vars.$clr2;
+    color: vars.$gray1;
+    // border-radius: 30px;
+    width: 100vw;
+    overflow-y:hidden;
+    h1{
+        flex-grow: 1;
+    }
+    .header-container{
+        align-self: center;
+        display: grid;
+        grid-template-columns: 1fr, auto, auto;
+        align-items: center;
+        .web-logo{
+            grid-column: 1;
+        }
+
+        .user-info, .user-login{
+            grid-column: 2;
+            margin: 0 auto;
+        }
+        
+        .user-info {
+            margin: 8px;
+            text-align: center;
+        
+            .progress-container {
+              /* background-color: rgb(255, 255, 255); */
+              border: 2px solid vars.$clr2-bg-light;
+              border-radius: 12px;
+              margin: 2px;
+              height: 20px;
+              width: 100%;
+            //   text-align: center;
+        
+              .progress-percentage {
+                background-color: vars.$clr2-bg-light;
+                border-radius: 12px;
+                height: 100%;
+                color: var(--clr1);
+                width: 0%;
+              }
+            }
+          }
+
+        .app-nav{
+            grid-column: 3;
+            justify-self: end;
+
+            a{
+                margin-right: 20px;
+            }
+
+            a.active {
+                color: vars.$clr2-bg-light;
+                font-weight: 600;
+                text-decoration: underline;
+              }
+        }
+    }
+}

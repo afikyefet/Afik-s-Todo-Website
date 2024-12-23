@@ -1,0 +1,219 @@
+@import url("https://fonts.googleapis.com/css2?family=Edu+VIC+WA+NT+Beginner&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Funnel+Sans:ital,wght@0,300..800;1,300..800&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+/* Components */
+@import "cmps/AppHeader.css";
+@import "cmps/UserMsg.css";
+@import "cmps/ToggleButton.css";
+@import "cmps/Chart.css";
+@import "cmps/DataTable.css";
+@import "cmps/FancyBox.css";
+@import "cmps/SplitPane.css";
+@import "cmps/TodoFilter.css";
+@import "cmps/TodoList.css";
+@import "cmps/TodoPreview.css";
+@import "cmps/TodoDetails.css";
+@import "cmps/TodoEdit.css";
+:root {
+  --clr1: rgb(55, 70, 83);
+  --clr2: rgb(99, 120, 115);
+  --clr1bg: rgb(149, 159, 166);
+  --clr1bg-light: rgb(200, 213, 221);
+  --clr2bg: rgb(206, 233, 215);
+  --clr2bg-light: rgb(236, 253, 250);
+  --gray1: rgb(240, 240, 240);
+  --gray2: rgb(155, 155, 155);
+  --gray3: rgb(44, 44, 44);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: rgb(44, 44, 44);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0.5em 0 0.5em;
+  font-family: "DM Serif Text", cursive;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  text-decoration: none;
+  color: unset;
+  cursor: pointer;
+}
+
+/* Don't stretch media */
+img, embed, video, object {
+  max-width: 100%;
+}
+
+/* Debugging */
+.debug * {
+  outline: 1px solid gold;
+}
+
+.about nav a {
+  margin-right: 10px;
+}
+
+.done {
+  text-decoration: line-through;
+  font-style: italic;
+}
+
+/* Flex helpers */
+.flex {
+  display: flex;
+}
+
+.flex.flex-column {
+  flex-direction: column;
+}
+
+.flex.justify-center {
+  justify-content: center;
+}
+
+.flex.justify-between {
+  justify-content: space-between;
+}
+
+.flex.align-center {
+  align-items: center;
+}
+
+/* Text helpers */
+.colored-text {
+  color: rgb(55, 70, 83);
+}
+
+/* List helpers */
+.clean-list {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+/* Font Awesome icons */
+.fa {
+  font-family: fa;
+}
+
+.fa.fa-facebook::before {
+  content: "\f39e";
+}
+
+.fa.fa-twitter::before {
+  content: "\f099";
+}
+
+.fa.fa-dribbble::before {
+  content: "\f17d";
+}
+
+.fa.fa-behance::before {
+  content: "\f1b4";
+}
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr 1.6rem;
+}
+
+.main-layout > * {
+  grid-column: 2;
+}
+
+.main-layout .full {
+  grid-column: 1/-1;
+}
+
+.container {
+  max-width: 800px;
+  padding: 1em;
+  margin: auto;
+}
+
+button, .btn {
+  cursor: pointer;
+  background-color: rgb(206, 233, 215);
+  margin: 0.5em;
+  border: 0;
+  padding: 0.5em 0.8em;
+  border-radius: 4px;
+}
+
+button:hover, .btn:hover {
+  background-color: rgb(99, 120, 115);
+  color: white;
+  transition: 0.3s;
+}
+
+input:focus {
+  background-color: rgb(149, 159, 166);
+  transition: background-color 1s;
+}
+
+.app-header {
+  background-color: rgb(99, 120, 115);
+  color: rgb(240, 240, 240);
+  width: 100vw;
+  overflow-y: hidden;
+}
+.app-header h1 {
+  flex-grow: 1;
+}
+.app-header .header-container {
+  align-self: center;
+  display: grid;
+  grid-template-columns: 1fr, auto, auto;
+  align-items: center;
+}
+.app-header .header-container .web-logo {
+  grid-column: 1;
+}
+.app-header .header-container .user-info, .app-header .header-container .user-login {
+  grid-column: 2;
+  margin: 0 auto;
+}
+.app-header .header-container .user-info {
+  margin: 8px;
+  text-align: center;
+}
+.app-header .header-container .user-info .progress-container {
+  /* background-color: rgb(255, 255, 255); */
+  border: 2px solid rgb(236, 253, 250);
+  border-radius: 12px;
+  margin: 2px;
+  height: 20px;
+  width: 100%;
+}
+.app-header .header-container .user-info .progress-container .progress-percentage {
+  background-color: rgb(236, 253, 250);
+  border-radius: 12px;
+  height: 100%;
+  color: var(--clr1);
+  width: 0%;
+}
+.app-header .header-container .app-nav {
+  grid-column: 3;
+  justify-self: end;
+}
+.app-header .header-container .app-nav a {
+  margin-right: 20px;
+}
+.app-header .header-container .app-nav a.active {
+  color: rgb(236, 253, 250);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/*# sourceMappingURL=newMain.css.map */

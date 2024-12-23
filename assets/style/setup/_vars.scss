@@ -1,0 +1,28 @@
+
+// Variables
+$clr1: rgb(55, 70, 83);
+$clr2: rgb(99, 120, 115);
+
+$clr1-bg: rgb(149, 159, 166);
+$clr1-bg-light: rgb(200, 213, 221);
+$clr2-bg: rgb(206, 233, 215);
+$clr2-bg-light: rgb(236, 253, 250);
+
+$gray1: rgb(240, 240, 240);
+$gray2: rgb(155, 155, 155);
+$gray3: rgb(44, 44, 44);
+
+
+:root {
+    --clr1: #{$clr1};
+    --clr2: #{$clr2};
+  
+    --clr1bg: #{$clr1-bg};
+    --clr1bg-light: #{$clr1-bg-light};
+    --clr2bg: #{$clr2-bg};
+    --clr2bg-light: #{$clr2-bg-light};
+  
+    --gray1: #{$gray1};
+    --gray2: #{$gray2};
+    --gray3: #{$gray3};
+  }

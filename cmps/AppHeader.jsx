@@ -30,7 +30,7 @@ export function AppHeader() {
 	return (
 		<header className="app-header full main-layout">
 			<section className="header-container">
-				<h1>
+				<h1 className="web-logo">
 					<Link to="/">Afik Todo App</Link>
 				</h1>
 				{user ? (
@@ -49,15 +49,15 @@ export function AppHeader() {
 						</section>
 					</section>
 				) : (
-					<section>
+					<section className="user-login">
 						<LoginSignup />
 					</section>
 				)}
 				<nav className="app-nav">
-					<NavLink to="/">Home</NavLink>
-					<NavLink to="/about">About</NavLink>
-					<NavLink to="/todo">Todos</NavLink>
-					<NavLink to="/dashboard">Dashboard</NavLink>
+					<NavLink className="NavLink" to="/">Home</NavLink>
+					<NavLink className="NavLink" to="/about">About</NavLink>
+					<NavLink className="NavLink" to="/todo">Todos</NavLink>
+					<NavLink className="NavLink" to="/dashboard">Dashboard</NavLink>
 				</nav>
 			</section>
 			<UserMsg />
