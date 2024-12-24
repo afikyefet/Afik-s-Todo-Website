@@ -15,6 +15,13 @@ button:hover, .btn:hover {
   transition: 0.3s;
 }
 
+button:disabled:hover, .btn:disabled:hover {
+  background-color: initial;
+  color: initial;
+  cursor: not-allowed;
+  transition: none; 
+}
+
 input:focus {
   background-color: vars.$clr1-bg;
   transition: background-color 1s;

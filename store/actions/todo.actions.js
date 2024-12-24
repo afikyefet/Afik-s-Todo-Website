@@ -16,7 +16,7 @@ export function loadTodos(filterBy = {}) {
 	return todoService
 		.query(filterBy)
 		.then((todos) => {
-			store.dispatch({ type: SET_TODO, todos })
+			store.dispatch({ type: SET_TODO, todos })			
 			return todos
 		})
 		.catch((err) => {
@@ -82,7 +82,8 @@ export function setSelectedTodo(todoId) {
 
 export async function removeTodo(todoId) {
 	// const todo =  await todoService.get(todoId)
-	
+	const user = store.getState().userModule.user
+
 	return todoService
 	.remove(todoId)
 	.then(() => {
@@ -96,19 +97,19 @@ export async function removeTodo(todoId) {
 		})
 }
 
-export function onToggleTodo(todo) {
-		const todoToSave = { ...todo, isDone: !todo.isDone }
-		setIsLoading(true)
-		saveTodo(todoToSave)
-			.then((savedTodo) => {
-				showSuccessMsg(
-					`Todo Is ${savedTodo.isDone ? "done" : "back on your list"}`
-				)
+// export function onToggleTodo(todo) {
+// 		const todoToSave = { ...todo, isDone: !todo.isDone }
+// 		setIsLoading(true)
+// 		saveTodo(todoToSave)
+// 			.then((savedTodo) => {
+// 				showSuccessMsg(
+// 					`Todo Is ${savedTodo.isDone ? "done" : "back on your list"}`
+// 				)
 
-		})
-			.catch((err) => {
-				console.log("err:", err)
-				showErrorMsg("Cannot toggle todo " + todo._id)
-			})
-			.finally(setIsLoading(false))
-	}
+// 		})
+// 			.catch((err) => {
+// 				console.log("err:", err)
+// 				showErrorMsg("Cannot toggle todo " + todo._id)
+// 			})
+// 			.finally(setIsLoading(false))
+// 	}

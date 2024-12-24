@@ -49,8 +49,11 @@ function query(filterBy = {}) {
             todos.sort((a, b) => sortOrder * (a.importance - b.importance));
         }
 
+		// console.log(_paginateTodos(todos));
+		
 
-		return todos
+		// return todos
+		return _paginateTodos(todos)
 	})
 }
 
@@ -188,6 +191,14 @@ function _getTodoCountByImportanceMap(todos) {
 		{ low: 0, normal: 0, urgent: 0 }
 	)
 	return todoCountByImportanceMap
+}
+
+function _paginateTodos(todos, pageSize = 10){
+	const pages = []
+	for(let i = 0; i < todos.length; i += pageSize){
+		pages.push(todos.slice(i, i+ pageSize))
+	}
+	return pages
 }
 
 // Data Model:

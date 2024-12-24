@@ -6,6 +6,7 @@ import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 
 // prettier-ignore
 import { loadTodos, setFilterBy, removeTodo, setIsLoading, saveTodo,} from "../store/actions/todo.actions.js"
+import { userUpdate } from "../store/actions/user.actions.js"
 const { useSelector} = ReactRedux
 
 const { useEffect } = React
@@ -13,6 +14,7 @@ const { Link, useSearchParams } = ReactRouterDOM
 
 export function TodoIndex() {
 	const todos = useSelector((storeState) => storeState.todoModule.todos)
+	const user = useSelector((storeState) => storeState.userModule.user)
 	const filterBy = useSelector((storeState) => storeState.todoModule.filterBy)
 	const IsLoading = useSelector((storeState) => storeState.todoModule.isLoading)
 
@@ -87,6 +89,23 @@ export function TodoIndex() {
 			.finally(setIsLoading(false))
 	}
 
+	function onToggleTodo(todo) {
+		const todoToSave = { ...todo, isDone: !todo.isDone }
+		setIsLoading(true)
+		saveTodo(todoToSave)
+			.then((savedTodo) => {
+				showSuccessMsg(
+					`Todo Is ${savedTodo.isDone ? "done" : "back on your list"}`
+				)
+				if(user) userUpdate({...user, balance: (user.balance + 10)})
+		})
+			.catch((err) => {
+				console.log("err:", err)
+				showErrorMsg("Cannot toggle todo " + todo._id)
+			})
+			.finally(setIsLoading(false))
+	}
+	
 	if (IsLoading) return <div>Loading...</div>
 	return (
 		<section className="todo-index">
@@ -106,6 +125,7 @@ export function TodoIndex() {
 				todos={todos}
 				onRemoveTodo={onRemoveTodo}
 				defaultFilter={todoService.getDefaultFilter()}
+				onToggleTodo={onToggleTodo}
 			/>
 			<hr />
 			<h2>Todos Table</h2>
