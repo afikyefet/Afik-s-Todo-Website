@@ -102,7 +102,7 @@ export function onToggleTodo(todo) {
 		saveTodo(todoToSave)
 			.then((savedTodo) => {
 				showSuccessMsg(
-					`Todo is ${savedTodo.isDone ? "done" : "back on your list"}`
+					`Todo Is ${savedTodo.isDone ? "done" : "back on your list"}`
 				)
 
 		})
