@@ -3,30 +3,23 @@ import { TodoList } from "../cmps/TodoList.jsx"
 import { DataTable } from "../cmps/data-table/DataTable.jsx"
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
-import {
-	REMOVE_TODO,
-	UPDATE_TODO,
-	SET_TODO,
-} from "../store/reducers/todo.reducer.js"
-// prettier-ignore
-import { loadTodos, setFilterBy, removeTodo, setIsLoading, saveTodo, setProgressPercentage,} from "../store/actions/todo.actions.js"
-import { userUpdate } from "../store/actions/user.actions.js"
-const { useSelector, useDispatch } = ReactRedux
 
-const { useState, useEffect } = React
+// prettier-ignore
+import { loadTodos, setFilterBy, removeTodo, setIsLoading, saveTodo,} from "../store/actions/todo.actions.js"
+const { useSelector} = ReactRedux
+
+const { useEffect } = React
 const { Link, useSearchParams } = ReactRouterDOM
 
 export function TodoIndex() {
 	const todos = useSelector((storeState) => storeState.todoModule.todos)
-	const user = useSelector((storeState) => storeState.userModule.user)
 	const filterBy = useSelector((storeState) => storeState.todoModule.filterBy)
 	const IsLoading = useSelector((storeState) => storeState.todoModule.isLoading)
 
-	// Special hook for accessing search-params:
 	const [searchParams, setSearchParams] = useSearchParams()
 
+	
 	const defaultFilter = todoService.getFilterFromSearchParams(searchParams)
-
 	useEffect(() => {
 		let isFilterSet = false
 
@@ -49,6 +42,7 @@ export function TodoIndex() {
 			})
 			.finally(setIsLoading(false))
 	}, [filterBy, setSearchParams])
+	
 
 	function onSetFilterBy(filterBy) {
 		setFilterBy(filterBy)
@@ -68,7 +62,6 @@ export function TodoIndex() {
 			removeTodo(todoId)
 				.then(() => {
 					showSuccessMsg(`Todo removed`)
-					setProgressPercentage()
 				})
 				.catch((err) => {
 					console.log("err:", err)
@@ -78,32 +71,14 @@ export function TodoIndex() {
 		}
 	}
 
-	function onToggleTodo(todo) {
-		const todoToSave = { ...todo, isDone: !todo.isDone }
-		setIsLoading(true)
-		saveTodo(todoToSave)
-			.then((savedTodo) => {
-				showSuccessMsg(
-					`Todo is ${savedTodo.isDone ? "done" : "back on your list"}`
-				)
-				if (savedTodo.isDone && user) userUpdate({ ...user, balance: user.balance + 10 })
-				setProgressPercentage()
-			})
-			.catch((err) => {
-				console.log("err:", err)
-				showErrorMsg("Cannot toggle todo " + todo._id)
-			})
-			.finally(setIsLoading(false))
-	}
 
 	async function addQuickTodo(){
 		const todo = todoService.getQuickTodo()
-		
+
 		setIsLoading(true)
 		await saveTodo(todo, false)
 			.then((savedTodo) => {
 				showSuccessMsg(`Todo Saved (id: ${savedTodo._id})`)
-				setProgressPercentage()
 			})
 			.catch((err) => {
 				showErrorMsg("Cannot save todo")
@@ -130,8 +105,7 @@ export function TodoIndex() {
 			<TodoList
 				todos={todos}
 				onRemoveTodo={onRemoveTodo}
-				onToggleTodo={onToggleTodo}
-				defaultFilter={defaultFilter}
+				defaultFilter={todoService.getDefaultFilter()}
 			/>
 			<hr />
 			<h2>Todos Table</h2>

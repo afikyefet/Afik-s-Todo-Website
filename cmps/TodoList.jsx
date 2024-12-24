@@ -1,7 +1,8 @@
+import { onToggleTodo } from "../store/actions/todo.actions.js"
 import { TodoPreview } from "./TodoPreview.jsx"
 const { Link } = ReactRouterDOM
 
-export function TodoList({ todos, onRemoveTodo, onToggleTodo }) {
+export function TodoList({ todos, onRemoveTodo }) {
 
     return (
         <ul className="todo-list">

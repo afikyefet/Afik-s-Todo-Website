@@ -1,22 +1,18 @@
-const { useState, useEffect } = React
+const {useEffect } = React
 const { Link, NavLink } = ReactRouterDOM
-const { useNavigate } = ReactRouter
 
-import { userService } from "../services/user.service.js"
 import { UserMsg } from "./UserMsg.jsx"
 import { LoginSignup } from "./LoginSignup.jsx"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { userLogout } from "../store/actions/user.actions.js"
-import { todoService } from "../services/todo.service.js"
-// prettier-ignore
-import {loadTodos,setProgressPercentage,} from "../store/actions/todo.actions.js"
+
+import {loadTodos,} from "../store/actions/todo.actions.js"
+import { ProgressBar } from "./ProgressBar.jsx"
 const { useSelector } = ReactRedux
 
 export function AppHeader() {
 	const user = useSelector((storeState) => storeState.userModule.user)
-	const progressPercentage = useSelector(
-		(storeState) => storeState.todoModule.progressPercentage
-	)
+
 	useEffect(() => {
 		loadTodos()
 	}, [])
@@ -38,15 +34,7 @@ export function AppHeader() {
 						<Link to={`/user/${user._id}`}>Hello {user.fullname}</Link>
 						<span> {user.balance}</span>
 						<button onClick={onLogout}>Logout</button>
-						<section className="progress-bar">
-							Todo progress: {progressPercentage}%
-							<div className="progress-container">
-								<div
-									className="progress-percentage"
-									style={{ width: `${progressPercentage}%` }}
-								></div>
-							</div>
-						</section>
+						<ProgressBar />
 					</section>
 				) : (
 					<section className="user-login">

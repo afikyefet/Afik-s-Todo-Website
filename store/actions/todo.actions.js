@@ -1,3 +1,4 @@
+import { showErrorMsg, showSuccessMsg } from "../../services/event-bus.service.js"
 import { todoService } from "../../services/todo.service.js"
 import {
 	ADD_TODO,
@@ -5,20 +6,17 @@ import {
 	IS_LOADING,
 	REMOVE_TODO,
 	SET_FILTER,
-	SET_PROGRESS,
 	SET_TODO,
 	UPDATE_TODO,
 } from "../reducers/todo.reducer.js"
 import { store } from "../store.js"
-import { userAddActivity } from "./user.actions.js"
-const user = store.getState().userModule.user
+import { userAddActivity, userUpdate } from "./user.actions.js"
 
 export function loadTodos(filterBy = {}) {
 	return todoService
 		.query(filterBy)
 		.then((todos) => {
 			store.dispatch({ type: SET_TODO, todos })
-			setProgressPercentage()
 			return todos
 		})
 		.catch((err) => {
@@ -31,22 +29,27 @@ export function setIsLoading(isLoading) {
 	store.dispatch({ type: IS_LOADING, isLoading })
 }
 
-export async function saveTodo(todo, isUpdate = true) {
+export function saveTodo(todo, isUpdate = true) {
 	const type = todo._id && isUpdate ? UPDATE_TODO : ADD_TODO
-
-	try {		
-		const savedTodo = await todoService.save(todo, isUpdate)
-		store.dispatch({ type, todo: savedTodo })
-		if (type === UPDATE_TODO &&  isUpdate && user) {
-			userAddActivity("Updated a todo: "+ todo.txt)
-		} else if (type === ADD_TODO && user) {
-			userAddActivity("Added a todo: "+ todo.txt)
+	const user = store.getState().userModule.user
+	return todoService.save(todo, isUpdate)
+	.then(savedTodo => {
+		store.dispatch({ type, todo: todo })
+        if (savedTodo && user) {
+			if (savedTodo.isDone && user){ 
+				userUpdate({ ...user, balance: user.balance + 10 })					
 		}
+            const actionText = type === UPDATE_TODO
+                ? `Updated a todo: ${savedTodo.txt}`
+                : `Added a todo: ${savedTodo.txt}`;
+            userAddActivity(actionText)
+        }
 		return savedTodo
-	} catch (err) {
+	})
+	.catch(err => {
 		console.log("todo action -> could not save todo")
 		throw err
-	}
+	})
 }
 
 export function setFilterBy(filterBy) {
@@ -78,13 +81,13 @@ export function setSelectedTodo(todoId) {
 }
 
 export async function removeTodo(todoId) {
-	const todo =  await todoService.get(todoId)
+	// const todo =  await todoService.get(todoId)
 	
 	return todoService
-		.remove(todoId)
-		.then(() => {
-			if(user) userAddActivity("Deleted a todo: "+ todo.txt)
+	.remove(todoId)
+	.then(() => {
 			store.dispatch({ type: REMOVE_TODO, todoId })
+			if(user) userAddActivity("Deleted a todo: "+ todoId)
 			return todoId
 		})
 		.catch((err) => {
@@ -93,10 +96,19 @@ export async function removeTodo(todoId) {
 		})
 }
 
-export function setProgressPercentage(todos) {
-	todoService.query({})
-	.then((todos)=>{
-		const percentage = todoService.getProgressPercentage(todos)
-		return store.dispatch({ type: SET_PROGRESS, percentage })
-	})
-}
+export function onToggleTodo(todo) {
+		const todoToSave = { ...todo, isDone: !todo.isDone }
+		setIsLoading(true)
+		saveTodo(todoToSave)
+			.then((savedTodo) => {
+				showSuccessMsg(
+					`Todo is ${savedTodo.isDone ? "done" : "back on your list"}`
+				)
+
+		})
+			.catch((err) => {
+				console.log("err:", err)
+				showErrorMsg("Cannot toggle todo " + todo._id)
+			})
+			.finally(setIsLoading(false))
+	}

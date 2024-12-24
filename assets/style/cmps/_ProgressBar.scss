@@ -1,0 +1,20 @@
+@use '../setup/vars';
+
+
+.progress-container {
+    /* background-color: rgb(255, 255, 255); */
+    border: 2px solid vars.$clr2-bg-light;
+    border-radius: 12px;
+    margin: 2px;
+    height: 20px;
+    width: 100%;
+  //   text-align: center;
+
+    .progress-percentage {
+      background-color: vars.$clr2-bg-light;
+      border-radius: 12px;
+      height: 100%;
+      color: var(--clr1);
+      width: 0%;
+    }
+  }

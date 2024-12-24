@@ -63,12 +63,12 @@ export function userUpdate(user) {
 		.finally(setUserLoading(false))
 }
 
-export function userAddActivity(activityTxt) {
+export async function userAddActivity(activityTxt) {
 	const user = store.getState().userModule.user
 	const activity = { txt: activityTxt, at: Date.now() }
 	const userToUpdate = { ...user, activities: [...user.activities, activity] }
 
-	return userUpdate(userToUpdate)
+	return await userUpdate(userToUpdate)
 }
 
 export function setUserLoading(isLoading){
