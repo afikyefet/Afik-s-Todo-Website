@@ -9,8 +9,8 @@ export function ProgressBar(){
     },[todos])
 
     function getProgressPercentage(todos) {
-        const totalTodosNum = todos.length
-        const doneTodosNum = todos.filter((todo) => todo.isDone).length
+        const totalTodosNum = todos.flat().length
+        const doneTodosNum = todos.flat().filter((todo) => todo.isDone).length
         const todoIsDonePercentage = Math.round((doneTodosNum / totalTodosNum) * 100)
     
         if (totalTodosNum === 0 || doneTodosNum === 0) {

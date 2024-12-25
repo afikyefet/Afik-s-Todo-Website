@@ -29,21 +29,29 @@ export function todoReducer(state = initialState, cmd = {}) {
 				...state,
 				selectedTodo: cmd.todo,
 			}
-		case ADD_TODO:
-			return {
-				...state,
-				todos: [...state.todos, cmd.todo],
-			}
+			case ADD_TODO:
+				return {
+					...state,
+					todos: state.todos.map((todoPage, idx) =>
+						idx === state.todos.length - 1 && todoPage.length < 10
+							? [...todoPage, cmd.todo] // Add to the last array if it has fewer than 10 items
+							: todoPage // Keep all other arrays unchanged
+					).concat(state.todos[state.todos.length - 1].length === 10 ? [[cmd.todo]] : []), // Add a new array if the last one has 10 items
+				};
 		case REMOVE_TODO:
 			return {
 				...state,
-				todos: state.todos.filter((todo) => todo._id !== cmd.todoId),
+				todos: state.todos.map(todoPage =>
+					todoPage.filter(todo => todo._id !== cmd.todoId)
+				),
 			}
 		case UPDATE_TODO:
-			return {
-				...state,
-				todos: state.todos.map((todo) =>
-					todo._id === cmd.todo._id ? cmd.todo : todo
+				return {
+					...state,
+					todos: state.todos.map(todoPage =>
+						todoPage.map(todo =>
+							todo._id === cmd.todo._id ? cmd.todo : todo
+					)
 				),
 			}
 		case SET_FILTER:

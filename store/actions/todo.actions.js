@@ -57,27 +57,43 @@ export function setFilterBy(filterBy) {
 }
 
 export function setSelectedTodo(todoId) {
-	loadTodos()
-		.then((todos) => {
-			const todo = todos.find((todo) => todo._id === todoId)
-			if (!todo) {
-				console.error("Todo not found:", todoId)
-				return
-			}
+    loadTodos()
+        .then((todos) => {
+            let selectedTodo = null;
+            let pageIndex = null;
 
-			const todoIdx = todos.findIndex((currTodo) => currTodo._id === todo._id)
-			const nextTodo = todos[todoIdx + 1] ? todos[todoIdx + 1] : todos[0]
-			const prevTodo = todos[todoIdx - 1]
-				? todos[todoIdx - 1]
-				: todos[todos.length - 1]
-			todo.nextTodoId = nextTodo._id
-			todo.prevTodoId = prevTodo._id
-			return store.dispatch({ type: GET_TODO, todo })
-		})
-		.catch((err) => {
-			console.error("todo action -> could not get todo", err)
-			throw err
-		})
+            todos.some((todoPage, idx) => {
+                const foundTodo = todoPage.find((todo) => todo._id === todoId);
+                if (foundTodo) {
+                    selectedTodo = foundTodo;
+                    pageIndex = idx;
+                    return true;
+                }
+                return false;
+            });
+
+            if (!selectedTodo) {
+                console.error("Todo not found:", todoId);
+                return;
+            }
+
+            // Find next and previous todos, considering page boundaries
+            const allTodos = todos.flat(); // Flatten array of arrays for easier navigation
+            const todoIdx = allTodos.findIndex((todo) => todo._id === selectedTodo._id);
+            const nextTodo = allTodos[todoIdx + 1] || allTodos[0]; // Wrap around to the first todo
+            const prevTodo = allTodos[todoIdx - 1] || allTodos[allTodos.length - 1]; // Wrap around to the last todo
+
+            // Attach next/prev IDs to the selected todo
+            selectedTodo.nextTodoId = nextTodo._id;
+            selectedTodo.prevTodoId = prevTodo._id;
+
+            // Dispatch the selected todo
+            return store.dispatch({ type: GET_TODO, todo: selectedTodo });
+        })
+        .catch((err) => {
+            console.error("todo action -> could not get todo", err);
+            throw err;
+        });
 }
 
 export async function removeTodo(todoId) {
@@ -96,20 +112,3 @@ export async function removeTodo(todoId) {
 			throw err
 		})
 }
-
-// export function onToggleTodo(todo) {
-// 		const todoToSave = { ...todo, isDone: !todo.isDone }
-// 		setIsLoading(true)
-// 		saveTodo(todoToSave)
-// 			.then((savedTodo) => {
-// 				showSuccessMsg(
-// 					`Todo Is ${savedTodo.isDone ? "done" : "back on your list"}`
-// 				)
-
-// 		})
-// 			.catch((err) => {
-// 				console.log("err:", err)
-// 				showErrorMsg("Cannot toggle todo " + todo._id)
-// 			})
-// 			.finally(setIsLoading(false))
-// 	}
