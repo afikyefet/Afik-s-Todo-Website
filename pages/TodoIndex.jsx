@@ -51,7 +51,9 @@ export function TodoIndex() {
 	}
 
 	function onResetFilter() {
-		onSetFilterBy(todoService.getDefaultFilter())
+		const defaultFilter = todoService.getDefaultFilter();
+		setFilterBy(defaultFilter)
+		setSearchParams(defaultFilter)
 	}
 
 	function onRemoveTodo(todoId) {

@@ -1,17 +1,45 @@
 
-// Variables
-$clr1: rgb(55, 70, 83);
-$clr2: rgb(99, 120, 115);
+// // Variables
+// $clr1: rgb(55, 70, 83);
+// $clr2: rgb(99, 120, 115);
 
-$clr1-bg: rgb(149, 159, 166);
-$clr1-bg-light: rgb(200, 213, 221);
-$clr2-bg: rgb(206, 233, 215);
-$clr2-bg-light: rgb(236, 253, 250);
+// $clr1-bg: rgb(149, 159, 166);
+// $clr1-bg-light: rgb(200, 213, 221);
+// $clr2-bg: rgb(206, 233, 215);
+// $clr2-bg-light: rgb(236, 253, 250);
 
-$gray1: rgb(240, 240, 240);
-$gray2: rgb(155, 155, 155);
-$gray3: rgb(44, 44, 44);
+// $gray1: rgb(240, 240, 240);
+// $gray2: rgb(155, 155, 155);
+// $gray3: rgb(44, 44, 44);
 
+
+// :root {
+//     --clr1: #{$clr1};
+//     --clr2: #{$clr2};
+  
+//     --clr1bg: #{$clr1-bg};
+//     --clr1bg-light: #{$clr1-bg-light};
+//     --clr2bg: #{$clr2-bg};
+//     --clr2bg-light: #{$clr2-bg-light};
+  
+//     --gray1: #{$gray1};
+//     --gray2: #{$gray2};
+//     --gray3: #{$gray3};
+//   }
+
+
+  // Variables
+$clr1: #f94144;
+$clr2: #f3722c;
+
+$clr1-bg: #f8961e;
+$clr1-bg-light: #f9844a;
+$clr2-bg: #f9c74f;
+$clr2-bg-light: #90be6d;
+
+$gray1: #43aa8b;
+$gray2: #4d908e;
+$gray3: #577590;
 
 :root {
     --clr1: #{$clr1};
@@ -25,4 +53,4 @@ $gray3: rgb(44, 44, 44);
     --gray1: #{$gray1};
     --gray2: #{$gray2};
     --gray3: #{$gray3};
-  }
+}

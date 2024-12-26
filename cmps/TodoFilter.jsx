@@ -11,6 +11,7 @@ export function TodoFilter({ filterBy, onSetFilterBy, onResetFilter }) {
 		onSetFilterDebaunce(filterByToEdit)
 	}, [filterByToEdit])
 
+
 	function handleChange({ target }) {
 		let { value, name: field } = target
 		switch (target.type) {

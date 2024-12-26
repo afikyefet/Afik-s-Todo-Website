@@ -32,12 +32,13 @@ export function todoReducer(state = initialState, cmd = {}) {
 			case ADD_TODO:
 				return {
 					...state,
-					todos: state.todos.map((todoPage, idx) =>
+					todos: state.todos.length > 0 ? state.todos.map((todoPage, idx) =>
 						idx === state.todos.length - 1 && todoPage.length < 10
 							? [...todoPage, cmd.todo]
 							: todoPage
-					).concat(state.todos[state.todos.length - 1].length === 10 ? [[cmd.todo]] : []),
-				};
+					).concat(state.todos[state.todos.length - 1].length === 10 ? [[cmd.todo]] : [])
+					: [[cmd.todo]]
+				}
 				case REMOVE_TODO:
 					const updatedTodos = state.todos.map((todoPage, idx) => {
 					  const updatedPage = todoPage.filter(todo => todo._id !== cmd.todoId)
