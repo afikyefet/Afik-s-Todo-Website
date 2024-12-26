@@ -34,17 +34,31 @@ export function todoReducer(state = initialState, cmd = {}) {
 					...state,
 					todos: state.todos.map((todoPage, idx) =>
 						idx === state.todos.length - 1 && todoPage.length < 10
-							? [...todoPage, cmd.todo] // Add to the last array if it has fewer than 10 items
-							: todoPage // Keep all other arrays unchanged
-					).concat(state.todos[state.todos.length - 1].length === 10 ? [[cmd.todo]] : []), // Add a new array if the last one has 10 items
+							? [...todoPage, cmd.todo]
+							: todoPage
+					).concat(state.todos[state.todos.length - 1].length === 10 ? [[cmd.todo]] : []),
 				};
-		case REMOVE_TODO:
-			return {
-				...state,
-				todos: state.todos.map(todoPage =>
-					todoPage.filter(todo => todo._id !== cmd.todoId)
-				),
-			}
+				case REMOVE_TODO:
+					const updatedTodos = state.todos.map((todoPage, idx) => {
+					  const updatedPage = todoPage.filter(todo => todo._id !== cmd.todoId)
+				  
+					  if (idx < state.todos.length - 1 && state.todos[idx + 1].length > 0) {
+						const [movedTodo] = state.todos[idx + 1].splice(0, 1)
+						if (movedTodo) {
+						  updatedPage.push(movedTodo)
+						}
+					  }
+					  return updatedPage
+					})
+				  
+					if (updatedTodos[updatedTodos.length - 1].length === 0) {
+					  updatedTodos.pop();
+					}
+				  
+					return {
+					  ...state,
+					  todos: updatedTodos,
+					};
 		case UPDATE_TODO:
 				return {
 					...state,
